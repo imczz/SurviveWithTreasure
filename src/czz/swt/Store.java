@@ -1,6 +1,7 @@
 package czz.swt;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,7 +23,12 @@ public class Store {
 	/**
 	 * 商品列表
 	 * */
-	private List<Res> resList;
+	private List<Commodity> commoditys;
+	
+	/**
+	 * 正在出售的商品
+	 * */
+	private HashMap<Integer, Cost> sales;
 
 	//====================methods====================
 	
@@ -33,15 +39,6 @@ public class Store {
 	public int getName() {
 		return name;
 	}
-
-	public List<Res> getResList() {
-		return resList;
-	}
-
-	public void setResList(List<Res> resList) {
-		this.resList.clear();
-		this.resList.addAll(resList);
-	}
 	
 	/**
 	 * 构造方法
@@ -49,7 +46,6 @@ public class Store {
 	 * */
 	public Store(int id) {
 		this.id = id;
-		this.resList = new ArrayList<Res>();
 	}
 	
 	/**
@@ -61,7 +57,5 @@ public class Store {
 	public Store(int id, int name, List<Res> resList) {
 		this.id = id;
 		this.name = name;
-		this.resList = new ArrayList<Res>();
-		this.resList.addAll(resList);
 	}
 }

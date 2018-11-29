@@ -17,9 +17,19 @@ public class Res {
 	private String name;
 	
 	/**
-	 * 资源消耗
+	 * 计量资源的单位
 	 * */
-	private Cost cost;
+	private String unit;
+	
+	/**
+	 * 是否为消耗品
+	 * */
+	private boolean isConsumable;
+	
+	/**
+	 * 最大使用次数
+	 * */
+	private int useTime;
 
 	//====================methods====================
 	
@@ -35,33 +45,64 @@ public class Res {
 		this.name = name;
 	}
 
-	public Cost getCost() {
-		return cost;
+	public int getUseTime() {
+		return useTime;
 	}
-	
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public boolean isConsumable() {
+		return isConsumable;
+	}
+
 	/**
 	 * 构造方法
 	 * @param id 资源id
-	 * @param cost 资源消耗值
+	 * @param name 资源的名称
+	 * @param unit 计量资源的单位
 	 * */
-	public Res(int id, Cost cost) {
+	public Res(int id, String name, String unit) {
 		this.id = id;
-		this.cost = cost;
+		this.name = name;
+		this.unit = unit;
+		this.isConsumable =false;
+		this.useTime = -1;				//负数代表无限次使用
 	}
 	
 	/**
 	 * 构造方法2
 	 * @param id 资源id
-	 * @param name 资源名称
-	 * @param cost 资源消耗值
+	 * @param name 资源的名称
+	 * @param unit 计量资源的单位
+	 * @param isConsumable 是否为消耗品
+	 * @param useTime 最大使用次数
 	 * */
-	public Res(int id, String name, Cost cost) {
+	public Res(int id, String name, String unit, boolean isConsumable, int useTime) {
 		this.id = id;
 		this.name = name;
-		this.cost = cost;
+		this.unit = unit;
+		this.isConsumable = isConsumable;
+		this.useTime = useTime;
 	}
 	
+	/**
+	 * 判断两个相同的资源是否完全相同
+	 * */
 	public boolean equals(Res res) {
-		return (this.id == res.id && this.cost.equals(res.cost));
+		return (this.id == res.id);
+	}
+	
+	/**
+	 * 转换为文字
+	 * */
+	@Override
+	public String toString() {
+		return name;
 	}
 }
