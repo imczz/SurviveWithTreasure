@@ -31,6 +31,16 @@ public class Res {
 	 * */
 	private int useTime;
 
+	/**
+	 * 资源提供的资源
+	 * */
+	private Offer offer;
+	
+	/**
+	 * 资源占用的资源
+	 * */
+	private Demand demand;
+	
 	//====================methods====================
 	
 	public int getId() {
@@ -61,6 +71,14 @@ public class Res {
 		return isConsumable;
 	}
 
+	public Demand getDemand() {
+		return demand;
+	}
+
+	public Offer getOffer() {
+		return offer;
+	}
+
 	/**
 	 * 构造方法
 	 * @param id 资源id
@@ -83,12 +101,14 @@ public class Res {
 	 * @param isConsumable 是否为消耗品
 	 * @param useTime 最大使用次数
 	 * */
-	public Res(int id, String name, String unit, boolean isConsumable, int useTime) {
+	public Res(int id, String name, String unit, boolean isConsumable, int useTime, Offer offer, Demand demand) {
 		this.id = id;
 		this.name = name;
 		this.unit = unit;
 		this.isConsumable = isConsumable;
 		this.useTime = useTime;
+		this.offer = offer;
+		this.demand = demand;
 	}
 	
 	/**

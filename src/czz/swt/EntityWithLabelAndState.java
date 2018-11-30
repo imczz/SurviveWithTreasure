@@ -3,45 +3,41 @@ package czz.swt;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 队伍是参加这个游戏的基本单位
+ * 带有标签和状态的实体
  * @author CZZ
  * */
-public class Group {
-	
-	/**
-	 * id号
-	 * */
-	private int id;
-	
-	/**
-	 * 队伍名
-	 * */
-	private String name;
+public abstract class EntityWithLabelAndState extends Entity{
 
 	/**
 	 * 标签列表
 	 * */
-	private ConcurrentHashMap<Integer, Label> labels;
+	protected ConcurrentHashMap<Integer, Label> labels;
 	
 	/**
-	 * 队伍状态列表
+	 * 状态列表
 	 * */
-	private ConcurrentHashMap<Integer, State> states;
-
+	protected ConcurrentHashMap<Integer, State> states;
+	
 	//====================methods====================
 	
-	public int getId() {
-		return id;
+	/**
+	 * 构造方法
+	 * */
+	public EntityWithLabelAndState(int id) {
+		super(id);
+		labels = new ConcurrentHashMap<Integer, Label>();
+		states = new ConcurrentHashMap<Integer, State>();
 	}
-
-	public String getName() {
-		return name;
+	
+	/**
+	 * 构造方法2
+	 * */
+	public EntityWithLabelAndState(int id, String name) {
+		super(id, name);
+		labels = new ConcurrentHashMap<Integer, Label>();
+		states = new ConcurrentHashMap<Integer, State>();
 	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	
 	public ConcurrentHashMap<Integer, Label> getLabels() {
 		return labels;
 	}
@@ -51,29 +47,7 @@ public class Group {
 	}
 	
 	/**
-	 * 构造方法
-	 * @param id 节点的id
-	 * */
-	public Group(int id) {
-		this.id = id;
-		labels = new ConcurrentHashMap<Integer, Label>();
-		states = new ConcurrentHashMap<Integer, State>();
-	}
-	
-	/**
-	 * 构造方法2
-	 * @param id 节点的id
-	 * @param name 节点的名称
-	 * */
-	public Group(int id, String name) {
-		this.id = id;
-		this.name = name;
-		labels = new ConcurrentHashMap<Integer, Label>();
-		states = new ConcurrentHashMap<Integer, State>();
-	}
-	
-	/**
-	 * 给节点增加一个标签
+	 * 增加一个标签
 	 * @param label 待添加的标签
 	 * @return true 添加成功;false 添加失败或者标签已存在
 	 * */
@@ -87,7 +61,7 @@ public class Group {
 	}
 	
 	/**
-	 * 移除指定的标签
+	 * 移除指定id的标签
 	 * @param labelId 待移除的标签id
 	 * @return true 移除成功;false 移除失败或者标签不存在
 	 * */
@@ -119,7 +93,7 @@ public class Group {
 	}
 	
 	/**
-	 * 给节点增加一个状态
+	 * 增加一个状态
 	 * @param state 待添加的状态
 	 * @return true 添加成功;false 添加失败或者状态已存在
 	 * */
@@ -133,7 +107,7 @@ public class Group {
 	}
 	
 	/**
-	 * 移除指定的状态
+	 * 移除指定id的状态
 	 * @param stateId 待移除的状态的id
 	 * @return true 移除成功;false 移除失败或者状态不存在
 	 * */

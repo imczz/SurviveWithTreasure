@@ -1,7 +1,7 @@
 package czz.swt;
 
 /**
- * 队伍所处状态
+ * 状态
  * @author CZZ
  * */
 public class State {

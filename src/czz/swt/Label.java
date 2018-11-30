@@ -1,7 +1,7 @@
 package czz.swt;
 
 /**
- * 标签，标签是某种范围的事物具有的标志，比如全局范围内的天气，或者某个地点拥有的东西
+ * 标签，标签是某种范围的事物具有的标志
  * @author CZZ
  * */
 public class Label {

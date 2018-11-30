@@ -14,6 +14,11 @@ public class Engine {
 	private GameMap gameMap;
 	
 	/**
+	 * 当前的GroupID
+	 * */
+	private int nowGroupID;
+	
+	/**
 	 * 队伍列表
 	 * */
 	private Hashtable<Integer, Group> groups;
@@ -27,4 +32,15 @@ public class Engine {
 	 * 游戏规则
 	 * */
 	private Rule rule;
+	
+	
+	//====================methods====================
+	
+	Engine() {
+		this.nowGroupID = 1;
+		this.gameMap = new GameMap();
+		this.groups = new Hashtable<Integer, Group>();
+		this.settingTable = new SettingTable();
+		this.rule = new Rule();
+	}
 }
