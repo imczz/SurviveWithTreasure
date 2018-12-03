@@ -4,7 +4,7 @@ package czz.swt;
  * 地图上的节点
  * @author CZZ
  * */
-public class PlaceNode extends Entity{
+public class PlaceNode extends EntityWithLabelAndState{
 
 	
 	//====================methods====================

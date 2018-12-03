@@ -91,6 +91,8 @@ public class Res {
 		this.unit = unit;
 		this.isConsumable =false;
 		this.useTime = -1;				//负数代表无限次使用
+		this.offer = null;
+		this.demand = null;
 	}
 	
 	/**

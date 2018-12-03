@@ -13,7 +13,7 @@ public class SettingTable {
 	/**
 	 * 资源定义表
 	 * */
-	private List<Res> resList;
+	private HashMap<Integer, Res> resSet;
 	
 	/**
 	 * 标签定义表
@@ -28,6 +28,7 @@ public class SettingTable {
 	//====================methods====================
 	
 	public SettingTable() {
+		resSet = new HashMap<Integer, Res>();
 		labels = new HashMap<String, List<Label> >();
 		states = new HashMap<String, List<State> >();
 		labels.put("global", new ArrayList<Label>());
@@ -38,13 +39,22 @@ public class SettingTable {
 		states.put("group", new ArrayList<State>());
 	}
 	
-	public List<Res> getResList() {
-		return resList;
+	/**
+	 * 资源是否存在
+	 * @param id 带检验存在资源的id
+	 * @return true存在;false不存在
+	 * */
+	public boolean hasRes(int id) {
+		return this.resSet.containsKey(id);
 	}
-
-	public void setResList(List<Res> resList) {
-		this.resList = resList;
+	
+	/**
+	 * 查找资源
+	 * @param id 带查找资源的id
+	 * @return 查询结果，为空则不存在
+	 * */
+	public Res getRes(int id) {
+		return this.resSet.get(id);
 	}
-
 	
 }

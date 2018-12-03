@@ -36,6 +36,14 @@ public class Engine {
 	
 	//====================methods====================
 	
+
+	public SettingTable getSettingTable() {
+		return settingTable;
+	}
+	
+	/**
+	 * 构造方法
+	 */
 	Engine() {
 		this.nowGroupID = 1;
 		this.gameMap = new GameMap();
@@ -43,4 +51,6 @@ public class Engine {
 		this.settingTable = new SettingTable();
 		this.rule = new Rule();
 	}
+
+
 }
