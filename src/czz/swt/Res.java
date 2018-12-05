@@ -4,18 +4,8 @@ package czz.swt;
  * 物品、资源
  * @author CZZ
  * */
-public class Res {
+public class Res extends Entity{
 
-	/**
-	 * 资源名称
-	 * */
-	private int id;
-	
-	/**
-	 * 资源名称
-	 * */
-	private String name;
-	
 	/**
 	 * 计量资源的单位
 	 * */
@@ -42,18 +32,6 @@ public class Res {
 	private Demand demand;
 	
 	//====================methods====================
-	
-	public int getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public int getUseTime() {
 		return useTime;
@@ -86,8 +64,7 @@ public class Res {
 	 * @param unit 计量资源的单位
 	 * */
 	public Res(int id, String name, String unit) {
-		this.id = id;
-		this.name = name;
+		super(id, name);
 		this.unit = unit;
 		this.isConsumable =false;
 		this.useTime = -1;				//负数代表无限次使用
@@ -104,8 +81,7 @@ public class Res {
 	 * @param useTime 最大使用次数
 	 * */
 	public Res(int id, String name, String unit, boolean isConsumable, int useTime, Offer offer, Demand demand) {
-		this.id = id;
-		this.name = name;
+		super(id, name);
 		this.unit = unit;
 		this.isConsumable = isConsumable;
 		this.useTime = useTime;
