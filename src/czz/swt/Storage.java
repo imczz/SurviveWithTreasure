@@ -95,7 +95,7 @@ public class Storage {
 			while (iter.hasNext()) {
 				entry = iter.next();
 				leftOffer = this.resOffer.getResNumber(resId) + this.resBag.getResNumber(resId) - this.resDemand.getResNumber(resId);	//剩余可占用
-				if (entry.getValue() > leftOffer) {			//待占用>已占用
+				if (entry.getValue() * value > leftOffer) {			//待占用>已占用(不允许某资源占用自己，所以不计算res.getOffer())
 					ret = false;
 					break;
 				}
@@ -118,12 +118,12 @@ public class Storage {
 			Entry<Integer, Integer> entry = null;
 			while (iter.hasNext()) {
 				entry = iter.next();
-				this.resDemand.addRes(res, entry.getValue());	//增加资源占用
+				this.resDemand.addRes(res, entry.getValue() * value);	//增加资源占用
 			}
 			iter = res.getOffer().getResValues().entrySet().iterator();
 			while (iter.hasNext()) {
 				entry = iter.next();
-				this.resOffer.addRes(res, entry.getValue());	//增加资源提供
+				this.resOffer.addRes(res, entry.getValue() * value);	//增加资源提供
 			}
 			ret = true;
 		}
@@ -147,9 +147,24 @@ public class Storage {
 	/**
 	 * 尝试同时增加一组资源
 	 * */
-	public boolean testAddResList() {
+	public boolean testAddResList(HashMap<Integer, Pair<Res, Integer>> resMap) {
 		boolean ret = false;
-		//TODO
+		HashMap<Integer, Integer> testOffer = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> testDemand = new HashMap<Integer, Integer>();
+		Iterator<Entry<Integer, Pair<Res, Integer>>> iter = resMap.entrySet().iterator();
+		Entry<Integer, Pair<Res, Integer>> entry = null;
+		Pair<Res, Integer> pair = null;
+		Res thisRes = null;
+		Demand resDemand = null;
+		Offer resOffer = null;
+		while (iter.hasNext()) {
+			entry = iter.next();
+			pair = entry.getValue();
+			thisRes = pair.first;
+			resDemand = thisRes.getDemand();
+			resOffer = thisRes.getOffer();
+			//resDemand.
+		}
 		return ret;
 	}
 	

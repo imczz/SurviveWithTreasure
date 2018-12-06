@@ -45,6 +45,7 @@ public class Pair<T, E> {
 	
 	/**
 	 * 转换为字符串表示
+	 * @return 字符串表示
 	 * */
 	@Override
 	public String toString() {

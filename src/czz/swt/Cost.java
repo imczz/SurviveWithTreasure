@@ -13,6 +13,14 @@ public class Cost extends OfferAndDemand{
 	/**
 	 * 构造方法
 	 * @param id 资源的id
+	 * */
+	public Cost(int id) {
+		super(id);
+	}
+	
+	/**
+	 * 构造方法2
+	 * @param id 资源的id
 	 * @param resValues 消耗的资源与对应的数量
 	 * */
 	public Cost(int id, HashMap<Integer, Integer> resValues) {
