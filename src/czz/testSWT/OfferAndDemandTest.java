@@ -71,6 +71,19 @@ class OfferAndDemandTest {
 	}
 	
 	@Test
+	void testBatch2() {
+		HashMap<Integer, Integer> values = new HashMap<Integer, Integer>();
+		values.put(1, 2);
+		values.put(2, 3);
+		values.put(3, 4);
+		Demand demand = new Demand(0, values);
+		assertTrue(demand.batch(values, 2));
+		assertEquals(6, demand.getValueById(1));
+		assertEquals(9, demand.getValueById(2));
+		assertEquals(12, demand.getValueById(3));
+	}
+	
+	@Test
 	void testContains() {
 		HashMap<Integer, Integer> values1 = new HashMap<Integer, Integer>();
 		values1.put(1, 2);

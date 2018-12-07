@@ -13,7 +13,7 @@ public class SettingTable {
 	/**
 	 * 资源定义表
 	 * */
-	private HashMap<Integer, Res> resSet;
+	private HashMap<Integer, ResDefine> resSet;
 	
 	/**
 	 * 标签定义表
@@ -28,7 +28,7 @@ public class SettingTable {
 	//====================methods====================
 	
 	public SettingTable() {
-		resSet = new HashMap<Integer, Res>();
+		resSet = new HashMap<Integer, ResDefine>();
 		labels = new HashMap<String, List<Label> >();
 		states = new HashMap<String, List<State> >();
 		labels.put("global", new ArrayList<Label>());
@@ -53,7 +53,7 @@ public class SettingTable {
 	 * @param id 带查找资源的id
 	 * @return 查询结果，为空则不存在
 	 * */
-	public Res getRes(int id) {
+	public ResDefine getRes(int id) {
 		return this.resSet.get(id);
 	}
 	

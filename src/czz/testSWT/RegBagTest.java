@@ -8,12 +8,12 @@ import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 
 import czz.swt.Pair;
-import czz.swt.Res;
+import czz.swt.ResDefine;
 import czz.swt.ResBag;
 
 class RegBagTest {
 	
-	Res[] resList = {new Res(1,"黄金","克"), new Res(2,"人民币","元"), new Res(3,"负重","千克"), new Res(4,"水","瓶"), new Res(5,"食物","份")};
+	ResDefine[] resList = {new ResDefine(1,"黄金","克"), new ResDefine(2,"人民币","元"), new ResDefine(3,"负重","千克"), new ResDefine(4,"水","瓶"), new ResDefine(5,"食物","份")};
 	
 	@Test
 	void testAdd() {
@@ -79,45 +79,45 @@ class RegBagTest {
 	@Test
 	void testBatch() {
 		ResBag resBag = new ResBag();
-		HashMap<Integer, Pair<Res, Integer>> oneBag = new HashMap<Integer, Pair<Res, Integer>>();
-		oneBag.put(resList[0].getId(), new Pair<Res, Integer>(resList[0], 3));
-		oneBag.put(resList[1].getId(), new Pair<Res, Integer>(resList[1], 4));
+		HashMap<Integer, Pair<ResDefine, Integer>> oneBag = new HashMap<Integer, Pair<ResDefine, Integer>>();
+		oneBag.put(resList[0].getId(), new Pair<ResDefine, Integer>(resList[0], 3));
+		oneBag.put(resList[1].getId(), new Pair<ResDefine, Integer>(resList[1], 4));
 		assertTrue(resBag.batch(oneBag));
 		assertEquals(3, resBag.getResNumber(1));
 		assertEquals(4, resBag.getResNumber(2));
-		oneBag.put(resList[0].getId(), new Pair<Res, Integer>(resList[0], 3));
-		oneBag.put(resList[1].getId(), new Pair<Res, Integer>(resList[1], -2));
+		oneBag.put(resList[0].getId(), new Pair<ResDefine, Integer>(resList[0], 3));
+		oneBag.put(resList[1].getId(), new Pair<ResDefine, Integer>(resList[1], -2));
 		assertTrue(resBag.batch(oneBag));
 		assertEquals(6, resBag.getResNumber(1));
 		assertEquals(2, resBag.getResNumber(2));
-		oneBag.put(resList[0].getId(), new Pair<Res, Integer>(resList[0], -6));
-		oneBag.put(resList[1].getId(), new Pair<Res, Integer>(resList[1], 0));
+		oneBag.put(resList[0].getId(), new Pair<ResDefine, Integer>(resList[0], -6));
+		oneBag.put(resList[1].getId(), new Pair<ResDefine, Integer>(resList[1], 0));
 		assertTrue(resBag.batch(oneBag));
 		assertEquals(0, resBag.getResNumber(1));
-		oneBag.put(resList[0].getId(), new Pair<Res, Integer>(resList[0], 0));
-		oneBag.put(resList[1].getId(), new Pair<Res, Integer>(resList[1], -6));
+		oneBag.put(resList[0].getId(), new Pair<ResDefine, Integer>(resList[0], 0));
+		oneBag.put(resList[1].getId(), new Pair<ResDefine, Integer>(resList[1], -6));
 		assertFalse(resBag.batch(oneBag));
 		assertEquals(2, resBag.getResNumber(2));
-		oneBag.put(resList[2].getId(), new Pair<Res, Integer>(resList[2], -6));
+		oneBag.put(resList[2].getId(), new Pair<ResDefine, Integer>(resList[2], -6));
 		assertFalse(resBag.batch(oneBag));
 	}
 	
 	@Test
 	void testReLoad() {
 		ResBag resBag = new ResBag();
-		HashMap<Integer, Pair<Res, Integer>> oneBag = new HashMap<Integer, Pair<Res, Integer>>();
-		oneBag.put(resList[0].getId(), new Pair<Res, Integer>(resList[0], 3));
-		oneBag.put(resList[1].getId(), new Pair<Res, Integer>(resList[1], 4));
+		HashMap<Integer, Pair<ResDefine, Integer>> oneBag = new HashMap<Integer, Pair<ResDefine, Integer>>();
+		oneBag.put(resList[0].getId(), new Pair<ResDefine, Integer>(resList[0], 3));
+		oneBag.put(resList[1].getId(), new Pair<ResDefine, Integer>(resList[1], 4));
 		assertTrue(resBag.reload(oneBag));
-		oneBag.put(resList[0].getId(), new Pair<Res, Integer>(resList[0], 1));
-		oneBag.put(resList[1].getId(), new Pair<Res, Integer>(resList[1], 2));
-		oneBag.put(resList[2].getId(), new Pair<Res, Integer>(resList[2], 3));
+		oneBag.put(resList[0].getId(), new Pair<ResDefine, Integer>(resList[0], 1));
+		oneBag.put(resList[1].getId(), new Pair<ResDefine, Integer>(resList[1], 2));
+		oneBag.put(resList[2].getId(), new Pair<ResDefine, Integer>(resList[2], 3));
 		assertTrue(resBag.reload(oneBag));
 		assertEquals(1, resBag.getResNumber(1));
 		assertEquals(3, resBag.getResNumber(3));
-		oneBag.put(resList[0].getId(), new Pair<Res, Integer>(resList[0], 1));
-		oneBag.put(resList[1].getId(), new Pair<Res, Integer>(resList[1], -2));
-		oneBag.put(resList[2].getId(), new Pair<Res, Integer>(resList[2], 3));
+		oneBag.put(resList[0].getId(), new Pair<ResDefine, Integer>(resList[0], 1));
+		oneBag.put(resList[1].getId(), new Pair<ResDefine, Integer>(resList[1], -2));
+		oneBag.put(resList[2].getId(), new Pair<ResDefine, Integer>(resList[2], 3));
 		assertFalse(resBag.reload(oneBag));
 		assertEquals(1, resBag.getResNumber(1));
 		assertEquals(2, resBag.getResNumber(2));

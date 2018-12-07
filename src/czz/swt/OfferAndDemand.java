@@ -160,42 +160,53 @@ public abstract class OfferAndDemand{
 	 * @return true批量增减正常执行;false出错
 	 * */
 	public boolean batch(HashMap<Integer, Integer> batchValue) {
+		return batch(batchValue, 1);
+	}
+	
+	/**
+	 * 批量改变数量
+	 * @param batchValue 资源名与对应的数量
+	 * @return true批量增减正常执行;false出错
+	 * */
+	public boolean batch(HashMap<Integer, Integer> batchValue, int times) {
 		boolean ret = true;
-		HashMap<Integer, Integer> testValues = new HashMap<Integer, Integer>(this.resValues);
-		Iterator<Entry<Integer, Integer>> iter = batchValue.entrySet().iterator();
-		Entry<Integer, Integer> entry = null;
-		Integer value = null;
-		int id;
-		Integer previousValue = null;
-		while (iter.hasNext()) {
-			entry = iter.next();
-			id = entry.getKey();
-			value = entry.getValue();
-			if (value == 0) {	//没有增减直接跳过
-				continue;
-			} else { 			//有增减
-				previousValue = testValues.get(id);
-				if (previousValue != null) {
-					previousValue += value;
-				} else {
-					previousValue = value;
-				}
-				if (previousValue > 0) {
-					testValues.put(id, previousValue);
-				} else if (previousValue == 0) {
-					testValues.remove(id);
-					//this.resList.remove(Integer.valueOf(id));
-				} else {
-					ret = false;
-					break;
+		if (times != 0) {
+			HashMap<Integer, Integer> testValues = new HashMap<Integer, Integer>(this.resValues);
+			Iterator<Entry<Integer, Integer>> iter = batchValue.entrySet().iterator();
+			Entry<Integer, Integer> entry = null;
+			Integer value = null;
+			int id;
+			Integer previousValue = null;
+			while (iter.hasNext()) {
+				entry = iter.next();
+				id = entry.getKey();
+				value = entry.getValue() * times;
+				if (value == 0) {	//没有增减直接跳过
+					continue;
+				} else { 			//有增减
+					previousValue = testValues.get(id);
+					if (previousValue != null) {
+						previousValue += value;
+					} else {
+						previousValue = value;
+					}
+					if (previousValue > 0) {
+						testValues.put(id, previousValue);
+					} else if (previousValue == 0) {
+						testValues.remove(id);
+						//this.resList.remove(Integer.valueOf(id));
+					} else {
+						ret = false;
+						break;
+					}
 				}
 			}
-		}
-		if (ret == true) {
-			this.resValues.clear();
-			this.resValues = testValues;
-			this.resList.clear();
-			this.resList.addAll(this.resValues.keySet());
+			if (ret == true) {
+				this.resValues.clear();
+				this.resValues = testValues;
+				this.resList.clear();
+				this.resList.addAll(this.resValues.keySet());
+			}
 		}
 		return ret;
 	}

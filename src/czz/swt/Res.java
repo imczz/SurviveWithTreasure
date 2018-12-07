@@ -4,111 +4,51 @@ package czz.swt;
  * 物品、资源
  * @author CZZ
  * */
-public class Res extends Entity{
+public class Res{
 
 	/**
-	 * 计量资源的单位
+	 * 资源定义
 	 * */
-	private String unit;
+	protected ResDefine resDefine;
 	
 	/**
-	 * 是否为可以使用的物品
-	 * */
-	private boolean isConsumable;
-	
-	/**
-	 * 最大使用次数
+	 * 剩余使用次数
 	 * */
 	private int useTime;
-
-	/**
-	 * 资源提供的资源（不允许某资源占用自己，待占用计算时不算自己的Offer）
-	 * */
-	private Offer offer;
-	
-	/**
-	 * 资源占用的资源（不允许某资源占用自己，待占用计算时不算自己的Offer）
-	 * */
-	private Demand demand;
 	
 	//====================methods====================
 
-	public int getUseTime() {
-		return useTime;
-	}
-
-	public String getUnit() {
-		return unit;
-	}
-
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-
-	public boolean isConsumable() {
-		return isConsumable;
-	}
-
-	public Demand getDemand() {
-		return demand;
-	}
-
-	public Offer getOffer() {
-		return offer;
-	}
-
 	/**
-	 * 构造方法
-	 * @param id 资源id
-	 * @param name 资源的名称
-	 * @param unit 计量资源的单位
+	 * 构造方法（资源需要使用资源定义来构造）
 	 * */
-	public Res(int id, String name, String unit) {
-		super(id, name);
-		this.unit = unit;
-		this.isConsumable =false;
-		this.useTime = -1;				//负数代表无限次使用
-		this.offer = null;
-		this.demand = null;
+	public Res(ResDefine resDefine) {
+		this.resDefine = resDefine;					//记录资源定义
+		this.useTime = resDefine.getMaxUseTime();
 	}
 	
 	/**
-	 * 构造方法2
-	 * @param id 资源id
-	 * @param name 资源的名称
-	 * @param unit 计量资源的单位
-	 * @param isConsumable 是否为消耗品
-	 * @param useTime 最大使用次数
+	 * 获取此资源的定义
+	 * @return 资源定义
 	 * */
-	public Res(int id, String name, String unit, boolean isConsumable, int useTime, Offer offer, Demand demand) {
-		super(id, name);
-		this.unit = unit;
-		this.isConsumable = isConsumable;
-		this.useTime = useTime;
-		this.offer = offer;
-		this.demand = demand;
+	public ResDefine getResDefine() {
+		return this.resDefine;
 	}
 	
 	/**
-	 * 构造方法2
-	 * @param res 另一个资源
+	 * 获取资源定义的id
+	 * @return 资源的id
 	 * */
-	public Res(Res res) {
-		super(res.id, res.name);
-		this.unit = res.unit;
-		this.isConsumable = res.isConsumable;
-		this.useTime = res.useTime;
-		this.offer = new Offer(res.offer);
-		this.demand = new Demand(res.demand);
+	public int getID() {
+		return this.getResDefine().getId();
 	}
 	
 	/**
-	 * 判断资源是否需要被删除
+	 * 判断资源是否用尽，且需要被删除
 	 * @return 消耗品使用次数是否耗尽
 	 * */
-	public boolean needDelete() {
+	public boolean outOfUse() {
 		boolean ret = false;
-		if (this.isConsumable && this.useTime == 0) ret = true;
+		if (resDefine.isConsumable() && this.useTime == 0) ret = true;
 		return ret;
 	}
 	
@@ -118,7 +58,7 @@ public class Res extends Entity{
 	 * */
 	public boolean canUse() {
 		boolean ret = false;
-		if (this.isConsumable && this.useTime != 0) ret = true;
+		if (resDefine.isConsumable() && this.useTime != 0) ret = true;
 		return ret;
 	}
 	
@@ -133,31 +73,5 @@ public class Res extends Entity{
 			ret = true;
 		}
 		return ret;
-	}
-	
-	/**
-	 * 检查有无自身依赖或者提供
-	 * @return true经过检验没有自身依赖和提供现象;false存在自身依赖或者提供现象
-	 * */
-	public boolean validate() {
-		boolean ret = true;
-		if (this.offer.hasRes(this.id) || this.demand.hasRes(this.id)) ret = false;
-		return ret;
-	}
-	
-	/**
-	 * 判断两个相同的资源是否完全相同
-	 * @param res 另一个资源
-	 * */
-	public boolean equals(Res res) {
-		return (this.id == res.id && this.useTime == res.useTime);
-	}
-	
-	/**
-	 * 转换为文字
-	 * */
-	@Override
-	public String toString() {
-		return name;
 	}
 }
