@@ -1,19 +1,32 @@
 package czz.swt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 资源背包，记录资源与对应的数量
+ * @author CZZ
  * */
 public class ResBag {
 
 	/**
+	 * 资源的id与资源背包的定义
+	 * */
+	private ConcurrentHashMap<Integer, ResDefine> idDefine;
+	
+	/**
+	 * 资源对应的数量
+	 * */
+	private ConcurrentHashMap<Integer, Integer> resCount;
+	
+	/**
 	 * 一个资源背包，key为资源id，value为<资源，数量>对
 	 * */
-	protected ConcurrentHashMap<Integer, Pair<ResDefine, Integer>> bag;
+	protected ConcurrentHashMap<ResDefine, List<ResPackage>> bag;
 	
 	/**
 	 * TODO:资源增减记录
@@ -26,28 +39,38 @@ public class ResBag {
 	 * 构造方法
 	 * */
 	public ResBag() {
-		this.bag = new ConcurrentHashMap<Integer, Pair<ResDefine, Integer>>();
+		this.idDefine = new ConcurrentHashMap<Integer, ResDefine>();
+		this.resCount = new ConcurrentHashMap<Integer, Integer>();
+		this.bag = new ConcurrentHashMap<ResDefine, List<ResPackage>>();
 	}
 	
 	/**
 	 * 复制（拷贝）构造方法
 	 * */
 	public ResBag(ResBag resBag) {
-		this.bag = new ConcurrentHashMap<Integer, Pair<ResDefine, Integer>>();
-		Iterator<Entry<Integer, Pair<ResDefine, Integer>>> iter = resBag.bag.entrySet().iterator();		//待并入数据迭代器
-		Entry<Integer, Pair<ResDefine, Integer>> entry = null;
+		this.bag = new ConcurrentHashMap<ResDefine, List<ResPackage>>();
+		Iterator<Entry<ResDefine, List<ResPackage>>> iter = resBag.bag.entrySet().iterator();		//待并入数据迭代器
+		Entry<ResDefine, List<ResPackage>> entry = null;
+		ArrayList<ResPackage> copyResList = null;
+		ArrayList<ResPackage> resList = null;
 		while (iter.hasNext()) {
 			entry = iter.next();
-			this.bag.put(entry.getKey(), new Pair<ResDefine, Integer>(entry.getValue()));
+			copyResList = new ArrayList<ResPackage>();
+			resList = (ArrayList<ResPackage>) entry.getValue();
+			for (int i = 0, length = resList.size(); i < length; i++) {
+				copyResList.add(new ResPackage(resList.get(i)));
+			}
+			this.bag.put(entry.getKey(), copyResList);
 		}
-		
+		this.idDefine = new ConcurrentHashMap<Integer, ResDefine>(resBag.idDefine);
+		this.resCount = new ConcurrentHashMap<Integer, Integer>(resBag.resCount);
 	}
 	
 	/**
-	 * 得到背包中资源的数量
-	 * @return 背包中资源的数量
+	 * 得到背包中资源的种类数
+	 * @return 背包中资源的种类数
 	 * */
-	public int size() {
+	public int typeCount() {
 		return bag.size();
 	}
 	
@@ -55,7 +78,7 @@ public class ResBag {
 	 * 返回内部的背包
 	 * @return 返回用于内部存储的背包
 	 * */
-	public ConcurrentHashMap<Integer, Pair<ResDefine, Integer>> getBag() {
+	public ConcurrentHashMap<ResDefine, List<ResPackage>> getBag() {
 		return this.bag;
 	}
 	
@@ -63,97 +86,131 @@ public class ResBag {
 	 * 清空这个背包
 	 * */
 	public void clear() {
+		Iterator<Entry<ResDefine, List<ResPackage>>> iter = this.bag.entrySet().iterator();
+		Entry<ResDefine, List<ResPackage>> entry = null;
+		while(iter.hasNext()) {						//清空每个序列
+			entry = iter.next();
+			entry.getValue().clear();
+		}
 		this.bag.clear();
 	}
 	
 	/**
-	 * 批量修改背包内容，不是覆盖，而是合并，要求合并之后数量value>=0
-	 * @param oneBag <id, number>构成的序列，number可以为负，但是合并之后非负
-	 * @return true合并成功;false合并失败，无更改
+	 * 是否含有某种资源
+	 * @param resDefine 资源定义
+	 * @return true含有资源;false没有这种资源
 	 * */
-	public boolean batch(HashMap<Integer, Pair<ResDefine, Integer>> oneBag) {
-		boolean ret = true;
-		if (oneBag != null && oneBag.size() != 0) {
-			ConcurrentHashMap<Integer, Pair<ResDefine, Integer>> testBag = 
-					new ConcurrentHashMap<Integer, Pair<ResDefine, Integer>>(this.bag);	//复制一份旧背包，得到一份待处理背包
-			Iterator<Entry<Integer, Pair<ResDefine, Integer>>> iter = oneBag.entrySet().iterator();		//待并入数据迭代器
-			Entry<Integer, Pair<ResDefine, Integer>> entry = null;
-			Pair<ResDefine, Integer> newPair = null;
-			Pair<ResDefine, Integer> oldResPair = null;
-			int id = 0;
-			while (iter.hasNext()) {
-				entry = iter.next();
-				newPair = entry.getValue();
-				id = entry.getKey();
-				if (newPair.second == 0) continue;
-				oldResPair = testBag.get(id);		//原背包中含有entry.getKey()
-				if (oldResPair != null) {			//需要合并
-					if (oldResPair.second + newPair.second < 0) {					//合并后的值小于0
-						ret = false;									//合并失败
-						break;
-					} else if (oldResPair.second == 0) {			//合并之后的值等于0
-						testBag.remove(entry.getKey());					//移除资源
-					}
-					oldResPair.second += newPair.second;			//计算合并后的值
-				} else {							//需要新增
-					testBag.put(id, new Pair<ResDefine, Integer>(newPair));	//将新值装入
-				}
-				
-			}
-			if (ret) {
-				this.bag.clear();
-				this.bag = testBag;				//用新的背包替换旧的背包
-			}
+	public boolean hasRes(ResDefine resDefine) {
+		boolean ret = false;
+		if (this.bag.containsKey(resDefine)) {
+			Integer count = this.resCount.get(resDefine.id);
+			if (count != null && count > 0) ret = true;
 		}
 		return ret;
 	}
 	
 	/**
-	 * oneBag不为空且oneBag的value全为正值，则背包替换为oneBag，
-	 * @param oneBag <id, number>构成的序列，number>0，为0则不插入
-	 * @return true成功;false失败（比如oneBag的value含有负值）
+	 * 是否含有某id的资源
+	 * @param resID 资源的id
 	 * */
-	public boolean reload(HashMap<Integer, Pair<ResDefine, Integer>> oneBag) {
-		boolean ret = true;
-		if (oneBag != null && oneBag.size() > 0) {
-			ConcurrentHashMap<Integer, Pair<ResDefine, Integer>> testBag = new ConcurrentHashMap<Integer, Pair<ResDefine, Integer>>();
-			Iterator<Entry<Integer, Pair<ResDefine, Integer>>> iter = oneBag.entrySet().iterator();
-			Entry<Integer, Pair<ResDefine, Integer>> entry = null;
-			while (iter.hasNext()) {
-				entry = iter.next();
-				Pair<ResDefine, Integer> resPair = entry.getValue();
-				if (resPair.second > 0) {
-					testBag.put(entry.getKey(), resPair);
-				} else {
-					ret = false;
-					break;
+	public boolean hasRes(int resID) {
+		boolean ret = false;
+		ResDefine resDefine = this.idDefine.get(resID);				//查找资源定义
+		if (resDefine != null) ret = hasRes(resDefine);
+		return ret;
+	}
+	
+	/**
+	 * 获取资源的数量
+	 * @param resDefine 资源定义
+	 * @return 资源数量
+	 * */
+	public int getResCount(ResDefine resDefine) {
+		int ret = 0;
+		if (resDefine != null && hasRes(resDefine)) {
+			ret = this.resCount.get(resDefine.id);
+		}
+		return ret;
+	}
+	
+	/**
+	 * 获取某id资源的数量
+	 * @param resID 资源id
+	 * @return 资源数量
+	 * */
+	public int getResCount(int resID) {
+		int ret = 0;
+		if (hasRes(resID)) {
+			ret = this.resCount.get(resID);
+		}
+		return ret;
+	}
+	
+	/**
+	 * 添加资源组
+	 * @param resPackage 资源组
+	 * @return 数量是否发生变化。true添加成功;false添加失败
+	 * */
+	public boolean addRes(ResPackage resPackage) {
+		boolean ret = false;
+		if (resPackage != null && resPackage.getCount() > 0) {
+			ResDefine resDefine = resPackage.getResDefine();			//资源定义
+			int id = resDefine.id;										//资源定义的id
+			List<ResPackage> resList = this.bag.get(resDefine);
+			if (resList != null) {
+				boolean hasSameRes = false;
+				Integer count = 0;			//旧的总数
+				for (int i = 0, length = resList.size(); i <length; i++) {
+					if (resList.get(i).isSameRes(resPackage)) {				//资源相同
+						resList.get(i).addPackage(resPackage);		//合并资源组
+						count = this.resCount.get(id);				//旧的总数
+						this.resCount.put(id, count + resPackage.getCount());		//新的总数
+						hasSameRes = true;
+						break;
+					}
 				}
+				if (!hasSameRes) {
+					resList.add(new ResPackage(resPackage));
+					this.resCount.put(id, resPackage.getCount());		//新的总数
+				}
+			} else {
+				resList = new ArrayList<ResPackage>();
+				resList.add(new ResPackage(resPackage));
+				this.bag.put(resDefine, resList);						//新的类型
+				this.idDefine.put(resDefine.id, resDefine);				//id与定义对应
+				this.resCount.put(id, resPackage.getCount());		//新的总数
 			}
-			if (ret) {
-				this.bag.clear();
-				this.bag = testBag;
-			}
+			ret = true;
+		}
+		return ret;
+	}
+	
+	/**
+	 * 根据资源定义添加资源
+	 * @param ResDefine 资源定义
+	 * @param count 资源增加的数量(count > 0)
+	 * @return 数量是否发生变化。true添加成功;false添加失败
+	 * */
+	public boolean addRes(ResDefine resDefine, int count) {
+		boolean ret = false;
+		if (resDefine != null && count > 0) {
+			ResPackage resPackage = new ResPackage(resDefine, count);
+			ret = this.addRes(resPackage);
 		}
 		return ret;
 	}
 	
 	/**
 	 * 添加资源
-	 * @param ResDefine 资源
-	 * @param value 资源增加的数量(value > 0)
+	 * @param Res 资源
+	 * @param count 资源增加的数量(count > 0)
 	 * @return 数量是否发生变化。true添加成功;false添加失败
 	 * */
-	public boolean addRes(ResDefine res, int value) {
+	public boolean addRes(Res res, int count) {
 		boolean ret = false;
-		if (res != null && value > 0) {				//增加的值>0
-			int id = res.getId();
-			Pair<ResDefine, Integer> resPair = bag.get(id);
-			if (resPair != null) {				//存在某个资源（查询到资源数量）
-				resPair.second += value;			//更新资源数量
-			} else {							//新增资源
-				bag.put(id, new Pair<ResDefine, Integer>(res, value));
-			}
-			ret = true;
+		if (res != null && res.getResDefine() != null && count > 0) {
+			ResPackage resPackage = new ResPackage(res, count);
+			ret = this.addRes(resPackage);
 		}
 		return ret;
 	}
@@ -166,71 +223,29 @@ public class ResBag {
 	 * */
 	public boolean reduceRes(int resId, int value) {
 		boolean ret = false;
-		if (value > 0) {				//减少的值>0
-			Pair<ResDefine, Integer> resPair = bag.get(resId);
-			if (resPair != null && resPair.second >= value) {
-				resPair.second -= value;			//更新资源数量
-				if (resPair.second == 0) {
-					bag.remove(resId);					//删除数量为0的资源
-				}
-				ret = true;
-			}
-		}
+		//TODO
 		return ret;
 	}
 	
 	/**
-	 * 增加或者减少资源
-	 * @param ResDefine 资源
-	 * @param value 资源增减的数量（value<>0）
-	 * @return 数量是否发生变化。true增减成功;false增减失败
+	 * 批量修改背包内容，不是覆盖，而是合并，要求合并之后数量value>=0
+	 * @param oneBag <id, number>构成的序列，number可以为负，但是合并之后非负
+	 * @return true合并成功;false合并失败，无更改
 	 * */
-	public boolean addReduceRes(ResDefine res, int value) {
-		boolean ret = false;
-		if (value > 0) {
-			ret = this.addRes(res, value);
-		} else if (value < 0) {
-			ret = this.reduceRes(res.getId(), -value);
-		}
+	public boolean batch(HashMap<ResDefine, List<ResPackage>> oneBag) {
+		boolean ret = true;
+		//TODO
 		return ret;
 	}
 	
 	/**
-	 * 是否存在某个资源
-	 * @param id 待查询的资源的id
-	 * @return true有;false无
+	 * oneBag不为空且oneBag的value全为正值，则背包替换为oneBag，
+	 * @param oneBag <id, number>构成的序列，number>0，为0则不插入
+	 * @return true成功;false失败（比如oneBag的value含有负值）
 	 * */
-	public boolean hasRes(int id) {
-		return bag.containsKey(id);
-	}
-	
-	/**
-	 * 获取背包中资源的数量
-	 * @param id 待查询的资源的id
-	 * @return 资源的数量，没有则返回0
-	 * */
-	public int getResNumber(int resId) {
-		int ret = 0;
-		Pair<ResDefine, Integer> pair = bag.get(resId);
-		if (pair != null) ret = pair.second;
-		return ret;
-	}
-	
-	/**
-	 * 转换为资源与对应数量的列表（HashMap）
-	 * @return 资源与对应数量的HashMap
-	 * */
-	public HashMap<Integer, Integer> toResValue(){
-		HashMap<Integer, Integer> ret = null;
-		if (this.bag.size() > 0) {
-			ret = new HashMap<Integer, Integer>();;
-			Iterator<Entry<Integer, Pair<ResDefine, Integer>>> iter = this.bag.entrySet().iterator();
-			Entry<Integer, Pair<ResDefine, Integer>> entry = null;
-			while (iter.hasNext()) {
-				entry = iter.next();
-				ret.put(entry.getKey(), entry.getValue().second);
-			}
-		}
+	public boolean reload(HashMap<Integer, Pair<ResDefine, Integer>> oneBag) {
+		boolean ret = true;
+		//TODO
 		return ret;
 	}
 	

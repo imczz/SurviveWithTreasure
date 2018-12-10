@@ -22,8 +22,17 @@ public class Res{
 	 * 构造方法（资源需要使用资源定义来构造）
 	 * */
 	public Res(ResDefine resDefine) {
-		this.resDefine = resDefine;					//记录资源定义
+		this.resDefine = resDefine;				//记录资源定义
 		this.useTime = resDefine.getMaxUseTime();
+	}
+	
+	/**
+	 * 复制（拷贝）构造方法
+	 * @param res 另一个res
+	 * */
+	public Res(Res res) {
+		this.resDefine = res.getResDefine();
+		this.useTime = res.getUseTime();
 	}
 	
 	/**
@@ -36,10 +45,18 @@ public class Res{
 	
 	/**
 	 * 获取资源定义的id
-	 * @return 资源的id
+	 * @return 资源定义的id
 	 * */
 	public int getID() {
 		return this.getResDefine().getId();
+	}
+	
+	/**
+	 * 获取物品的可使用次数
+	 * @return 资源的使用次数
+	 * */
+	public int getUseTime() {
+		return this.useTime;
 	}
 	
 	/**
@@ -74,4 +91,13 @@ public class Res{
 		}
 		return ret;
 	}
+	
+	public boolean equals(Res res) {
+		boolean ret = false;
+		if (this.resDefine.equals(res.getResDefine())) {
+			if (this.useTime == res.getUseTime()) ret = true;
+		}
+		return ret;
+	}
+	
 }

@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 /**
  * 资源存储空间，内含三个背包:资源背包resBag，资源提供资源背包resOffer，资源占用资源背包resDemand
+ * @author CZZ
  * */
 public class Storage {
 
@@ -86,21 +87,7 @@ public class Storage {
 	 * */
 	public boolean testAddRes(ResDefine res, int value) {
 		boolean ret = false;
-		if (value > 0) {
-			ret = true;
-			int resId = res.getId();
-			Iterator<Entry<Integer, Integer>> iter = res.getDemand().getResValues().entrySet().iterator();
-			Entry<Integer, Integer> entry = null;
-			Integer leftOffer = 0;
-			while (iter.hasNext()) {
-				entry = iter.next();
-				leftOffer = this.resOffer.getResNumber(resId) + this.resBag.getResNumber(resId) - this.resDemand.getResNumber(resId);	//剩余可占用
-				if (entry.getValue() * value > leftOffer) {			//待占用>已占用(不允许某资源占用自己，所以不计算res.getOffer())
-					ret = false;
-					break;
-				}
-			}
-		}
+		//TODO
 		return ret;
 	}
 	
@@ -152,14 +139,7 @@ public class Storage {
 	 * */
 	public boolean testReduceRes(ResDefine res, int value) {
 		boolean ret = false;
-		if (value > 0 && this.resBag.getResNumber(res.getId()) > value) {
-			Offer testOffer = new Offer(0, this.getResOffer().toResValue());			//总提供
-			Demand testDemand = new Demand(0, this.getResDemand().toResValue());		//总占用
-			testOffer.batch(this.resBag.toResValue());							//背包中的资源也作为提供
-			testOffer.batch(res.getOffer().getResValues(), -value);					//去掉当前影响（提供）
-			testDemand.batch(res.getDemand().getResValues(), -value);				//去掉当前影响（占用）
-			if (testOffer.contains(testDemand)) ret = true;					//提供的资源仍然大于占用
-		}
+		//TODO
 		return ret;
 	}
 	
@@ -171,21 +151,7 @@ public class Storage {
 	 * */
 	public boolean ReduceRes(ResDefine res, int value) {
 		boolean ret = false;
-		if (value > 0 && this.resBag.getResNumber(res.getId()) > value) {				//可以减少资源
-			this.resBag.reduceRes(res.getId(), value);
-			Iterator<Entry<Integer, Integer>> iter = res.getDemand().getResValues().entrySet().iterator();
-			Entry<Integer, Integer> entry = null;
-			while (iter.hasNext()) {
-				entry = iter.next();
-				this.resDemand.reduceRes(entry.getKey(), entry.getValue() * value);	//增加资源占用
-			}
-			iter = res.getOffer().getResValues().entrySet().iterator();
-			while (iter.hasNext()) {
-				entry = iter.next();
-				this.resOffer.reduceRes(entry.getKey(), entry.getValue() * value);	//增加资源提供
-			}
-			ret = true;
-		}
+		//TODO
 		return ret;
 	}
 	
@@ -196,32 +162,7 @@ public class Storage {
 	 * */
 	public boolean testChangeResList(HashMap<Integer, Pair<ResDefine, Integer>> resMap) {
 		boolean ret = false;
-		if (resMap == null || resMap.size() == 0) {
-			ret = true;
-		} else {		//resMap不为空
-			Offer testOffer = new Offer(0, this.resOffer.toResValue());			//装入自身的提供
-			Demand testDemand = new Demand(0, this.resDemand.toResValue());		//装入自身的占用
-			testOffer.batch(this.resBag.toResValue());
-			Iterator<Entry<Integer, Pair<ResDefine, Integer>>> iter = resMap.entrySet().iterator();
-			Entry<Integer, Pair<ResDefine, Integer>> entry = null;
-			Pair<ResDefine, Integer> pair = null;
-			ResDefine thisRes = null;
-			int resValue = 0;
-			Demand resDemand = null;
-			Offer resOffer = null;
-			while (iter.hasNext()) {
-				entry = iter.next();
-				pair = entry.getValue();
-				thisRes = pair.first;					//资源
-				resValue = pair.second;					//资源的数量
-				testOffer.addValue(thisRes.getId(), resValue);				//新加的资源也可以被占用
-				resDemand = thisRes.getDemand();			//此资源的资源占用
-				resOffer = thisRes.getOffer();				//此资源的资源提供
-				testDemand.batch(resDemand.resValues, resValue);	//累加资源占用
-				testOffer.batch(resOffer.resValues, resValue);		//累加资源提供
-			}
-			if (testOffer.contains(testDemand)) ret = true;			//提供物大于待占用
-		}
+		//TODO
 		return ret;
 	}
 	
@@ -232,24 +173,7 @@ public class Storage {
 	 * */
 	public boolean addResList(HashMap<Integer, Pair<ResDefine, Integer>> resMap) {
 		boolean ret = false;
-		if (resMap != null && resMap.size() > 0) {
-			ResBag resBag = new ResBag();
-			Iterator<Entry<Integer, Pair<ResDefine, Integer>>> iter = resMap.entrySet().iterator();
-			Entry<Integer, Pair<ResDefine, Integer>> entry = null;
-			Pair<ResDefine, Integer> pair = null;
-			ResDefine thisRes = null;
-			int resValue = 0;
-			Demand resDemand = null;
-			Offer resOffer = null;
-			while (iter.hasNext()) {
-				entry = iter.next();
-				pair = entry.getValue();
-				thisRes = pair.first;					//资源
-				resValue = pair.second;					//资源的数量
-				this.resBag.addRes(thisRes, resValue);
-			}
-			ret = true;
-		}
+		//TODO
 		return ret;
 	}
 	

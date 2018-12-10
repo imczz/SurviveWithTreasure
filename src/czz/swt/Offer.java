@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 /**
  * 资源提供的资源
+ * @author CZZ
  * */
 public class Offer extends OfferAndDemand{
 	
