@@ -12,44 +12,24 @@ public class Cost extends OfferAndDemand{
 	
 	/**
 	 * 构造方法
-	 * @param id 资源的id
+	 * @param res 资源的定义
 	 * */
-	public Cost(int id) {
-		super(id);
+	public Cost(ResDefine res) {
+		super(res);
 	}
 	
 	/**
 	 * 构造方法2
-	 * @param id 资源的id
+	 * @param res 资源的定义
 	 * @param resValues 消耗的资源与对应的数量
 	 * */
-	public Cost(int id, HashMap<Integer, Integer> resValues) {
-		super(id, resValues);
+	public Cost(ResDefine res, HashMap<ResDefine, Integer> resValues) {
+		super(res, resValues);
 	}
 	
 	@Override
 	protected String functionalDescription() {
-		return "需求";
-	}
-	
-	/**
-	 * 转换为字符串
-	 * @return 描述性字符串
-	 * */
-	@Override
-	public String toString() {
-		StringBuffer buffer = new StringBuffer("资源");
-		buffer.append(this.id);
-		if (resList != null && resList.size() > 0) {
-			buffer.append("需要:[");
-			for (int i = 0; i < resList.size(); i++) {
-				
-			}
-			buffer.append("]");
-		} else {
-			buffer.append("无消耗");
-		}
-		return buffer.toString();
+		return "花费";
 	}
 
 }

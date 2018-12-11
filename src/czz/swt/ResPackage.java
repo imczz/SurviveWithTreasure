@@ -9,7 +9,7 @@ public class ResPackage {
 	/**
 	 * 相同的资源
 	 * */
-	private Res res;
+	protected Res res;
 	
 	/**
 	 * 资源的数量（value>0）
@@ -88,8 +88,8 @@ public class ResPackage {
 	public Res popRes(int count) {
 		Res ret = null;
 		if (count > 0 && this.count >= count) {
-			ret = new Res(this.res);
 			count-=count;			//减少数量
+			ret = new Res(this.res);
 		}
 		return ret;
 	}
@@ -132,6 +132,17 @@ public class ResPackage {
 	public boolean isSameRes(ResPackage resPackage) {
 		boolean ret = false;
 		if (this.res.equals(resPackage.res)) ret = true;
+		return ret;
+	}
+	
+	/**
+	 * 判断某资源是否与资源组的资源相同
+	 * @param res 某个资源
+	 * @return true相同;false不同
+	 * */
+	public boolean isSameRes(Res res) {
+		boolean ret = false;
+		if (this.res.equals(res)) ret = true;
 		return ret;
 	}
 	

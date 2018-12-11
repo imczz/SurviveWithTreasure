@@ -160,7 +160,11 @@ public class ResDefine extends Entity{
 	 * @param res 另一个资源
 	 * */
 	public boolean equals(ResDefine res) {
-		return (this.id == res.id);
+		boolean ret = false;
+		if (res != null) {
+			ret = (this.id == res.id);
+		}
+		return ret;
 	}
 	
 	/**

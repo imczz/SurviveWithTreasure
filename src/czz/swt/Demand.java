@@ -12,21 +12,26 @@ public class Demand extends OfferAndDemand{
 	
 	/**
 	 * 构造方法
-	 * @param id 资源的id
 	 * */
-	public Demand(int resID) {
-		super(resID);
-		// TODO Auto-generated constructor stub
+	public Demand() {
+		super();
 	}
 	
 	/**
 	 * 构造方法2
-	 * @param id 资源的id
+	 * @param res 资源的定义
+	 * */
+	public Demand(ResDefine res) {
+		super(res);
+	}
+	
+	/**
+	 * 构造方法3
+	 * @param res 资源的定义
 	 * @param resValues 占用的资源与对应的数量
 	 * */
-	public Demand(int resID, HashMap<Integer, Integer> resValues) {
-		super(resID, resValues);
-		// TODO Auto-generated constructor stub
+	public Demand(ResDefine res, HashMap<ResDefine, Integer> resValues) {
+		super(res, resValues);
 	}
 
 	/**

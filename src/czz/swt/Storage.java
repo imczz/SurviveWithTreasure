@@ -16,14 +16,14 @@ public class Storage {
 	protected ResBag resBag;
 	
 	/**
-	 * 背包中的资源提供的资源，比如“有了骆驼就有了负重”
+	 * 背包中的资源提供的资源总数，比如“有了骆驼就有了负重”
 	 * */
-	protected ResBag resOffer;
+	protected Offer resOffer;
 	
 	/**
-	 * 背包中想要存放资源，需要占用的资源，比如“食物占用负重”
+	 * 背包中想要存放资源，需要占用的资源总数，比如“食物占用负重”
 	 * */
-	protected ResBag resDemand;
+	protected Demand resDemand;
 	
 	//====================methods====================
 	
@@ -32,8 +32,8 @@ public class Storage {
 	 * */
 	public Storage() {
 		this.resBag = new ResBag();
-		this.resOffer = new ResBag();
-		this.resDemand = new ResBag();
+		this.resOffer = new Offer();
+		this.resDemand = new Demand();
 	}
 	
 	/**
@@ -42,8 +42,8 @@ public class Storage {
 	 * */
 	public Storage(Storage storage) {
 		this.resBag = new ResBag(storage.getResBag());
-		this.resOffer = new ResBag(storage.getResOffer());
-		this.resDemand = new ResBag(storage.getResDemand());
+		this.resOffer = new Offer(storage.getResOffer());
+		this.resDemand = new Demand(storage.getResDemand());
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class Storage {
 	 * 返回内部的提供物背包（最好克隆后再修改）
 	 * @return 提供物背包
 	 * */
-	public ResBag getResOffer() {
+	public Offer getResOffer() {
 		return this.resOffer;
 	}
 	
@@ -66,7 +66,7 @@ public class Storage {
 	 * 返回内部的占用背包（最好克隆后再修改）
 	 * @return 占用背包
 	 * */
-	public ResBag getResDemand() {
+	public Demand getResDemand() {
 		return this.resDemand;
 	}
 	
@@ -101,16 +101,16 @@ public class Storage {
 		boolean ret = false;
 		if (value > 0) {				//可以增加资源	
 			this.resBag.addRes(res, value);
-			Iterator<Entry<Integer, Integer>> iter = res.getDemand().getResValues().entrySet().iterator();
-			Entry<Integer, Integer> entry = null;
+			Iterator<Entry<ResDefine, Integer>> iter = res.getDemand().getResValues().entrySet().iterator();
+			Entry<ResDefine, Integer> entry = null;
 			while (iter.hasNext()) {
 				entry = iter.next();
-				this.resDemand.addRes(res, entry.getValue() * value);	//增加资源占用
+				this.resDemand.addValue(res, entry.getValue() * value);	//增加资源占用
 			}
 			iter = res.getOffer().getResValues().entrySet().iterator();
 			while (iter.hasNext()) {
 				entry = iter.next();
-				this.resOffer.addRes(res, entry.getValue() * value);	//增加资源提供
+				this.resOffer.addValue(res, entry.getValue() * value);	//增加资源提供
 			}
 			ret = true;
 		}

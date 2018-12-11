@@ -3,9 +3,13 @@ package czz.testSWT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import czz.swt.ResDefine;
+import czz.swt.ResPackage;
 import czz.swt.ResBag;
 
 class RegBagTest {
@@ -40,26 +44,6 @@ class RegBagTest {
 		assertEquals(2, resBag.getResCount(1));
 	}
 	
-	/*
-	@Test
-	void testAddReduce() {
-		ResBag resBag = new ResBag();
-		assertTrue(resBag.addReduceRes(resList[0], 2));
-		assertTrue(resBag.addReduceRes(resList[1], 3));
-		assertTrue(resBag.addReduceRes(resList[2], 4));
-		assertTrue(resBag.addReduceRes(resList[2], 3));
-		assertFalse(resBag.addReduceRes(resList[0], 0));
-		assertTrue(resBag.addReduceRes(resList[1], -2));
-		assertEquals(2, resBag.getResNumber(1));
-		assertEquals(1, resBag.getResNumber(2));
-		assertEquals(7, resBag.getResNumber(3));
-		assertTrue(resBag.addReduceRes(resList[1], -1));
-		assertEquals(0, resBag.getResNumber(2));
-		assertFalse(resBag.addReduceRes(resList[2], -10));
-		assertEquals(7, resBag.getResNumber(3));
-	}
-	*/
-	
 	@Test
 	void testClone() {
 		ResBag resBag = new ResBag();
@@ -73,6 +57,30 @@ class RegBagTest {
 		assertTrue(resBag.addRes(resList[2], 4));
 		assertEquals(8, resBag.getResCount(3));
 		assertEquals(4, newBag.getResCount(3));
+	}
+	
+	@Test
+	void testReload() {
+		ResBag resBag = new ResBag();
+		List<ResPackage> oneBag = new ArrayList<ResPackage>();
+		oneBag.add(new ResPackage(resList[0], 1));
+		oneBag.add(new ResPackage(resList[0], 2));
+		oneBag.add(new ResPackage(resList[0], 3));
+		oneBag.add(new ResPackage(resList[1], 1));
+		oneBag.add(new ResPackage(resList[1], 3));
+		assertTrue(resBag.reload(oneBag));
+		assertEquals(6, resBag.getResCount(resList[0]));
+		assertEquals(4, resBag.getResCount(resList[1]));
+		assertEquals(0, resBag.getResCount(resList[2]));
+		oneBag.clear();
+		oneBag.add(new ResPackage(resList[1], 1));
+		oneBag.add(new ResPackage(resList[2], 1));
+		oneBag.add(new ResPackage(resList[2], 2));
+		oneBag.add(new ResPackage(resList[2], 4));
+		assertTrue(resBag.reload(oneBag));
+		assertEquals(0, resBag.getResCount(resList[0]));
+		assertEquals(1, resBag.getResCount(resList[1]));
+		assertEquals(7, resBag.getResCount(resList[2]));
 	}
 	
 }

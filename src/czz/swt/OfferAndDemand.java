@@ -1,10 +1,10 @@
 package czz.swt;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import czz.util.MyCompare;
 
@@ -16,29 +16,34 @@ public abstract class OfferAndDemand{
 	/**
 	 * 资源的id
 	 * */
-	protected int id;
+	protected ResDefine res;
 	
 	/**
 	 * 相对应的资源id列表
 	 * */
-	protected List<Integer> resList;
+	protected Set<ResDefine> resList;
 	
 	/**
 	 * 资源对应的数量
 	 * */
-	protected HashMap<Integer, Integer> resValues;
+	protected HashMap<ResDefine, Integer> resValues;
+	
+	/**
+	 * 通过资源定义的id查找资源定义
+	 * */
+	protected HashMap<Integer, ResDefine> idDefine;
 	
 	//====================methods====================
 	
-	public int getID() {
-		return id;
+	public ResDefine getDefine() {
+		return this.res;
 	}
 
 	/**
 	 * 获取消耗的资源列表
 	 * @return 消耗的资源列表
 	 * */
-	public List<Integer> getResList() {
+	public Set<ResDefine> getResList() {
 		return this.resList;
 	}
 	
@@ -46,32 +51,50 @@ public abstract class OfferAndDemand{
 	 * 获取消耗资源与对应数量的对应表
 	 * @return 消耗资源与对应数量的对应表
 	 * */
-	public HashMap<Integer, Integer> getResValues() {
+	public HashMap<ResDefine, Integer> getResValues() {
 		return this.resValues;
 	}
 	
 	/**
 	 * 构造方法
-	 * @param resID 消耗资源的id
 	 * */
-	public OfferAndDemand(int resID) {
-		this.id = resID;
-		this.resList = new ArrayList<Integer>();
-		this.resValues = new HashMap<Integer, Integer>();
+	public OfferAndDemand() {
+		this.res = null;
+		this.resList = new HashSet<ResDefine>();
+		this.resValues = new HashMap<ResDefine, Integer>();
+		this.idDefine = new HashMap<Integer, ResDefine>();
 	}
 	
 	/**
 	 * 构造方法2
 	 * @param resID 消耗资源的id
+	 * */
+	public OfferAndDemand(ResDefine res) {
+		this.res = res;
+		this.resList = new HashSet<ResDefine>();
+		this.resValues = new HashMap<ResDefine, Integer>();
+		this.idDefine = new HashMap<Integer, ResDefine>();
+	}
+	
+	/**
+	 * 构造方法3
+	 * @param resID 消耗资源的id
 	 * @param costResValue 被消耗的资源与对应的值
 	 * */
-	public OfferAndDemand(int resID, HashMap<Integer, Integer> resValues) {
-		this.id = resID;
-		this.resList = new ArrayList<Integer>();
-		this.resValues = new HashMap<Integer, Integer>();
+	public OfferAndDemand(ResDefine res, HashMap<ResDefine, Integer> resValues) {
+		this.res = res;
+		this.resList = new HashSet<ResDefine>();
+		this.resValues = new HashMap<ResDefine, Integer>();
+		this.idDefine = new HashMap<Integer, ResDefine>();
 		if (resValues != null) {
 			this.resList.addAll(resValues.keySet());
 			this.resValues.putAll(resValues);
+			Iterator<ResDefine> iter = this.resList.iterator();
+			ResDefine resDefine = null;
+			while (iter.hasNext()) {
+				resDefine = iter.next();
+				this.idDefine.put(resDefine.id, resDefine);
+			}
 		}
 	}
 	
@@ -80,9 +103,16 @@ public abstract class OfferAndDemand{
 	 * @param 
 	 * */
 	protected OfferAndDemand(OfferAndDemand offerAndDemand) {
-		this.id = offerAndDemand.id;
-		this.resList = new ArrayList<Integer>(offerAndDemand.resList);
-		this.resValues = new HashMap<Integer, Integer>(offerAndDemand.resValues);
+		this.res = offerAndDemand.res;
+		this.resList = new HashSet<ResDefine>(offerAndDemand.resList);
+		this.resValues = new HashMap<ResDefine, Integer>(offerAndDemand.resValues);
+		this.idDefine = new HashMap<Integer, ResDefine>(offerAndDemand.idDefine);
+	}
+	
+	public void clear() {
+		this.resValues.clear();
+		this.idDefine.clear();
+		this.resList.clear();
 	}
 	
 	/**
@@ -91,65 +121,129 @@ public abstract class OfferAndDemand{
 	protected abstract String functionalDescription();
 	
 	/**
-	 * 查找某个资源
-	 * @return true存在;false 不存在
+	 * 查找某个资源是否存在
+	 * @param resDefine 资源定义
+	 * @return true存在;false不存在
 	 * */
-	public boolean hasRes(int resId) {
+	public boolean hasRes(ResDefine resDefine) {
 		boolean ret = false;
-		if (resValues.get(resId) != null) ret = true;
+		if (resDefine != null) {
+			ret = resList.contains(resDefine);
+		}
+		return ret;
+	}
+	
+	/**
+	 * 查找某个资源是否存在
+	 * @param resID 资源id
+	 * @return true存在;false不存在
+	 * */
+	public boolean hasRes(int resID) {
+		boolean ret = false;
+		ResDefine resDefine = this.idDefine.get(resID);
+		if (resDefine != null) {
+			ret = this.hasRes(resDefine);
+		}
 		return ret;
 	}
 	
 	/**
 	 * 获取某个资源对应的值
+	 * @param resDefine 资源定义
 	 * @return 某个资源对应的值，0为不存在
 	 * */
-	public int getValueById(int resId) {
-		Integer ret = resValues.get(resId);
+	public int getValue(ResDefine resDefine) {
+		Integer ret = resValues.get(resDefine);
 		return (ret != null ? ret.intValue() : 0);
 	}
 	
 	/**
+	 * 获取某个资源对应的值
+	 * @param resID
+	 * @return 某个资源对应的值，0为不存在
+	 * */
+	public int getValue(int resID) {
+		int ret = 0;
+		ResDefine resDefine = this.idDefine.get(resID);
+		if (resDefine != null) {
+			ret = this.getValue(resDefine);
+		}
+		return ret;
+	}
+	
+	/**
 	 * 增加资源对应的数量
-	 * @param resId 资源的id(id不为自己的id)
+	 * @param resDefine 资源定义
 	 * @param value 资源增加的值(value > 0)
 	 * @return true数值增加;false数值不变（出错、value<=0等）
 	 * */
-	public boolean addValue(int resId, int value) {
+	public boolean addValue(ResDefine resDefine, int value) {
 		boolean ret = false;
-		if (resId != this.id && value > 0) {
-			Integer previousValue = this.resValues.get(resId);
+		if (resDefine != null && !resDefine.equals(this.res) && value > 0) {
+			Integer previousValue = this.resValues.get(resDefine);
 			if (previousValue != null) {
 				previousValue += value;
 			} else {
 				previousValue = value;
+				this.idDefine.put(resDefine.id, resDefine);
 			}
-			this.resValues.put(resId, previousValue);
+			this.resValues.put(resDefine, previousValue);
 			ret = true;
 		}
 		return ret;
 	}
 	
 	/**
+	 * 增加资源对应的数量
+	 * @param resID 已经存在资源定义的id
+	 * @param value 资源增加的值(value > 0)
+	 * @return true数值增加;false数值不变（出错、value<=0等）
+	 * */
+	public boolean addValue(int resID, int value) {
+		boolean ret = false;
+		if (this.res == null || this.res.id != resID) {
+			ResDefine resDefine = this.idDefine.get(resID);
+			if (resDefine != null) ret = this.addValue(resDefine, value);
+		}
+		return ret;
+	}
+	
+	/**
 	 * 减少资源对应的数量
-	 * @param resId 资源的id
+	 * @param resDefine 资源的定义
 	 * @param value 资源减少的值(value > 0)
 	 * @return true数值减少;false数值不变（资源不足、出错、value<=0等）
 	 * */
-	public boolean reduceValue(int resId, int value) {
+	public boolean reduceValue(ResDefine resDefine, int value) {
 		boolean ret = false;
-		if (value > 0) {
-			Integer previousValue = this.resValues.get(resId);
+		if (resDefine != null && value > 0 && !resDefine.equals(this.res)) {
+			Integer previousValue = this.resValues.get(resDefine);
 			if (previousValue != null && previousValue >= value) {
 				previousValue -= value;
 				if (previousValue == 0) {
-					this.resList.remove(Integer.valueOf(resId));
-					this.resValues.remove(resId);
+					this.resList.remove(resDefine);
+					this.resValues.remove(resDefine);
+					this.idDefine.remove(resDefine.id);
 				} else {
-					this.resValues.put(resId, previousValue);
+					this.resValues.put(resDefine, previousValue);
 				}
 				ret = true;
 			}
+		}
+		return ret;
+	}
+	
+	/**
+	 * 减少资源对应的数量
+	 * @param resID 资源的id
+	 * @param value 资源减少的值(value > 0)
+	 * @return true数值减少;false数值不变（资源不足、出错、value<=0等）
+	 * */
+	public boolean reduceValue(int resID, int value) {
+		boolean ret = false;
+		if (this.res == null || this.res.id != resID) {
+			ResDefine resDefine = this.idDefine.get(resID);
+			if (resDefine != null) ret = this.reduceValue(resDefine, value);
 		}
 		return ret;
 	}
@@ -159,7 +253,7 @@ public abstract class OfferAndDemand{
 	 * @param batchValue 资源名与对应的数量，如果
 	 * @return true批量增减正常执行;false出错
 	 * */
-	public boolean batch(HashMap<Integer, Integer> batchValue) {
+	public boolean batch(HashMap<ResDefine, Integer> batchValue) {
 		return batch(batchValue, 1);
 	}
 	
@@ -168,32 +262,32 @@ public abstract class OfferAndDemand{
 	 * @param batchValue 资源名与对应的数量
 	 * @return true批量增减正常执行;false出错
 	 * */
-	public boolean batch(HashMap<Integer, Integer> batchValue, int times) {
+	public boolean batch(HashMap<ResDefine, Integer> batchValue, int times) {
 		boolean ret = true;
 		if (times != 0) {
-			HashMap<Integer, Integer> testValues = new HashMap<Integer, Integer>(this.resValues);
-			Iterator<Entry<Integer, Integer>> iter = batchValue.entrySet().iterator();
-			Entry<Integer, Integer> entry = null;
+			HashMap<ResDefine, Integer> testValues = new HashMap<ResDefine, Integer>(this.resValues);
+			Iterator<Entry<ResDefine, Integer>> iter = batchValue.entrySet().iterator();
+			Entry<ResDefine, Integer> entry = null;
 			Integer value = null;
-			int id;
+			ResDefine resDefine;
 			Integer previousValue = null;
 			while (iter.hasNext()) {
 				entry = iter.next();
-				id = entry.getKey();
+				resDefine = entry.getKey();
 				value = entry.getValue() * times;
 				if (value == 0) {	//没有增减直接跳过
 					continue;
 				} else { 			//有增减
-					previousValue = testValues.get(id);
+					previousValue = testValues.get(resDefine);
 					if (previousValue != null) {
 						previousValue += value;
 					} else {
 						previousValue = value;
 					}
 					if (previousValue > 0) {
-						testValues.put(id, previousValue);
+						testValues.put(resDefine, previousValue);
 					} else if (previousValue == 0) {
-						testValues.remove(id);
+						testValues.remove(resDefine);
 						//this.resList.remove(Integer.valueOf(id));
 					} else {
 						ret = false;
@@ -229,14 +323,18 @@ public abstract class OfferAndDemand{
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer("资源");
-		buffer.append(this.id);
+		if (this.res != null) buffer.append(this.res);
 		if (resList != null && resList.size() > 0) {
 			String functionalDescription = functionalDescription();
 			if (functionalDescription == null || functionalDescription.equals("")) functionalDescription = "需求";
 			buffer.append(functionalDescription);
 			buffer.append(":[");
-			for (int i = 0; i < resList.size(); i++) {
-				
+			Iterator<Entry<ResDefine, Integer>> iter = this.resValues.entrySet().iterator();
+			Entry<ResDefine, Integer> entry = null;
+			while (iter.hasNext()) {
+				entry = iter.next();
+				buffer.append(entry.getKey().toString()).append(":").append(entry.getValue().toString()).append(entry.getKey().unit);
+				if (iter.hasNext()) buffer.append(", ");
 			}
 			buffer.append("]");
 		} else {

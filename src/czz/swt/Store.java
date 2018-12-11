@@ -168,7 +168,7 @@ public class Store {
 	public boolean addCommodity(Commodity commodity, boolean sale, Cost cost) {
 		boolean ret = false;
 		int id = commodity.getId();
-		if (!this.commoditys.containsKey(id) && cost.getID() == id) {
+		if (!this.commoditys.containsKey(id) /*&& cost.getID() == id*/) {
 			//当前商品列表不包含此商品，且消耗的源id为此商品的id
 			this.commoditys.put(id, commodity);
 			if (sale) {
@@ -214,7 +214,7 @@ public class Store {
 	public boolean onSale(int commodityID, boolean sale, Cost cost) {
 		boolean ret = false;
 		int id = commodityID;
-		if (this.commoditys.containsKey(id) && cost.getID() == id) {
+		if (this.commoditys.containsKey(id) /*&& cost.getID() == id*/) {
 			//当前商品列表包含此商品，且消耗的源id为此商品的id
 			if (sale) {
 				//此商品为用于出售的商品
