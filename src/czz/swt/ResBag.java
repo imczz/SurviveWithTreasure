@@ -48,21 +48,23 @@ public class ResBag {
 	 * */
 	public ResBag(ResBag resBag) {
 		this.bag = new ConcurrentHashMap<ResDefine, List<ResPackage>>();
-		Iterator<Entry<ResDefine, List<ResPackage>>> iter = resBag.bag.entrySet().iterator();		//待并入数据迭代器
-		Entry<ResDefine, List<ResPackage>> entry = null;
-		ArrayList<ResPackage> copyResList = null;
-		ArrayList<ResPackage> resList = null;
-		while (iter.hasNext()) {
-			entry = iter.next();
-			copyResList = new ArrayList<ResPackage>();
-			resList = (ArrayList<ResPackage>) entry.getValue();
-			for (int i = 0, length = resList.size(); i < length; i++) {
-				copyResList.add(new ResPackage(resList.get(i)));
+		if (resBag != null) {
+			Iterator<Entry<ResDefine, List<ResPackage>>> iter = resBag.bag.entrySet().iterator();		//待并入数据迭代器
+			Entry<ResDefine, List<ResPackage>> entry = null;
+			ArrayList<ResPackage> copyResList = null;
+			ArrayList<ResPackage> resList = null;
+			while (iter.hasNext()) {
+				entry = iter.next();
+				copyResList = new ArrayList<ResPackage>();
+				resList = (ArrayList<ResPackage>) entry.getValue();
+				for (int i = 0, length = resList.size(); i < length; i++) {
+					copyResList.add(new ResPackage(resList.get(i)));
+				}
+				this.bag.put(entry.getKey(), copyResList);
 			}
-			this.bag.put(entry.getKey(), copyResList);
+			this.idDefine = new ConcurrentHashMap<Integer, ResDefine>(resBag.idDefine);
+			this.resCount = new ConcurrentHashMap<Integer, Integer>(resBag.resCount);
 		}
-		this.idDefine = new ConcurrentHashMap<Integer, ResDefine>(resBag.idDefine);
-		this.resCount = new ConcurrentHashMap<Integer, Integer>(resBag.resCount);
 	}
 	
 	/**
@@ -204,7 +206,7 @@ public class ResBag {
 	
 	/**
 	 * 添加资源
-	 * @param Res 资源
+	 * @param res 资源
 	 * @param count 资源增加的数量(count > 0)
 	 * @return 数量是否发生变化。true添加成功;false添加失败
 	 * */
