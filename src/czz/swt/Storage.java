@@ -8,7 +8,7 @@ import java.util.Map.Entry;
  * 资源存储空间，内含三个背包:资源背包resBag，资源提供资源背包resOffer，资源占用资源背包resDemand
  * @author CZZ
  * */
-public class Storage {
+public class Storage extends Entity{
 
 	/**
 	 * 资源背包，里面包含所有的已有的资源，记录每种资源的数量
@@ -30,7 +30,8 @@ public class Storage {
 	/**
 	 * 构造方法
 	 * */
-	public Storage() {
+	public Storage(int id, String name) {
+		super(id, name);
 		this.resBag = new ResBag();
 		this.resOffer = new Offer();
 		this.resDemand = new Demand();
@@ -40,7 +41,8 @@ public class Storage {
 	 * 复制（拷贝）构造方法
 	 * @param 待复制的存储空间
 	 * */
-	public Storage(Storage storage) {
+	public Storage(int id, String name, Storage storage) {
+		super(id, name);
 		this.resBag = new ResBag(storage.getResBag());
 		this.resOffer = new Offer(storage.getResOffer());
 		this.resDemand = new Demand(storage.getResDemand());

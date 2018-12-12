@@ -1,11 +1,7 @@
 package czz.swt;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
-
-import czz.util.MyCompare;
 
 /**
  * 队伍是参加这个游戏的基本单位
@@ -18,6 +14,11 @@ public class Group extends EntityWithLabelAndState{
 	 * */
 	private Engine engine;
 	
+	/**
+	 * 存储空间（背包，仓库等）
+	 * */
+	protected List<Storage> storages;
+	
 	//====================methods====================
 	
 	/**
@@ -26,6 +27,7 @@ public class Group extends EntityWithLabelAndState{
 	 * */
 	public Group(Engine engine, int id) {
 		super(id);
+		storages = new ArrayList<Storage>();
 	}
 	
 	/**
@@ -35,6 +37,7 @@ public class Group extends EntityWithLabelAndState{
 	 * */
 	public Group(Engine engine, int id, String name) {
 		super(id, name);
+		storages = new ArrayList<Storage>();
 	}
 	
 }
