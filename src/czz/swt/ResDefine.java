@@ -31,6 +31,11 @@ public class ResDefine extends Entity{
 	 * */
 	protected Demand demand;
 	
+	/**
+	 * 如果此资源是一个容器，那么此资源就会含有一个存储空间
+	 * */
+	protected Storage storage;
+	
 	//====================methods====================
 
 	public int getMaxUseTime() {
@@ -70,6 +75,7 @@ public class ResDefine extends Entity{
 		this.maxUseTime = -1;				//负数代表无限次使用
 		this.offer = null;
 		this.demand = null;
+		this.storage = null;
 	}
 	
 	/**
@@ -79,14 +85,19 @@ public class ResDefine extends Entity{
 	 * @param unit 计量资源的单位
 	 * @param isConsumable 是否为消耗品
 	 * @param maxUseTime 最大使用次数
+	 * @param offer 此资源可以提供的资源
+	 * @param demand 此资源需要占用的资源
+	 * @param storage 此资源包含存储空间
 	 * */
-	public ResDefine(int id, String name, String unit, boolean isConsumable, int maxUseTime, Offer offer, Demand demand) {
+	public ResDefine(int id, String name, String unit, boolean isConsumable, int maxUseTime, 
+			Offer offer, Demand demand, Storage storage) {
 		super(id, name);
 		this.unit = unit;
 		this.isConsumable = isConsumable;
 		this.maxUseTime = maxUseTime;
 		this.offer = new Offer(offer);
 		this.demand = new Demand(demand);
+		this.storage = new Storage(storage);
 	}
 	
 	/**

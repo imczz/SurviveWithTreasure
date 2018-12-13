@@ -17,7 +17,7 @@ public class Group extends EntityWithLabelAndState{
 	/**
 	 * 存储空间（背包，仓库等）
 	 * */
-	protected List<Storage> storages;
+	protected Storage storage;
 	
 	//====================methods====================
 	
@@ -27,7 +27,7 @@ public class Group extends EntityWithLabelAndState{
 	 * */
 	public Group(Engine engine, int id) {
 		super(id);
-		storages = new ArrayList<Storage>();
+		this.storage = new Storage();
 	}
 	
 	/**
@@ -37,7 +37,7 @@ public class Group extends EntityWithLabelAndState{
 	 * */
 	public Group(Engine engine, int id, String name) {
 		super(id, name);
-		storages = new ArrayList<Storage>();
+		this.storage = new Storage();
 	}
 	
 }

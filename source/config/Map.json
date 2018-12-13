@@ -1,0 +1,47 @@
+{
+	"map": {
+		"node-template": [{
+			"id": 1,
+			"name": "大本营"
+		}, {
+			"id": 2,
+			"name": "沙漠"
+		}, {
+			"id": 3,
+			"name": "绿洲"
+		}, {
+			"id": 4,
+			"name": "城镇"
+		}, {
+			"id": 5,
+			"name": "王陵"
+		}, {
+			"id": 6,
+			"name": "宝山"
+		}],
+		"nodes": [{
+				"id": 1,
+				"template": 1
+			}, {
+				"id": 2,
+				"template": 2
+			}, {
+				"id": 3,
+				"template": 2
+			}, {
+				"id": 4,
+				"template": 2
+			}, {
+				"id": 5,
+				"template": 2
+			}, {
+				"id": 6,
+				"template": 2
+			}, {
+				"id": 2,
+				"template": 2
+			}
+
+		]
+	}
+}
