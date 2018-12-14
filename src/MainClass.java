@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-import swtMapDesigner.DesignerMainFrame;
+import czz.swtMapDesigner.DesignerMainFrame;
 
 public class MainClass {
 
@@ -12,6 +12,7 @@ public class MainClass {
 				System.out.println("打开地图编辑器");
 				DesignerMainFrame designer = new DesignerMainFrame();
 				designer.setVisible(true);
+				designer.pack();
 			}
 		}
 	}
