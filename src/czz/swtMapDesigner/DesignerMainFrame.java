@@ -2,19 +2,26 @@ package czz.swtMapDesigner;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.io.File;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -54,11 +61,6 @@ public class DesignerMainFrame extends JFrame{
 	JButton lineToButton;
 	
 	/**
-	 * 左边栏工具
-	 * */
-	JPanel leftPanelTools;
-	
-	/**
 	 * 添加节点模板
 	 * */
 	JButton addNodeTemplateButton;
@@ -69,9 +71,24 @@ public class DesignerMainFrame extends JFrame{
 	JButton removeNodeTemplateButton;
 	
 	/**
+	 * 节点列表的滚动条
+	 * */
+	JScrollPane nodeScrollPane;
+	
+	/**
 	 * 内容区
 	 * */
 	JPanel contextPanle;
+	
+	/**
+	 * 地图图片
+	 * */
+	ImageIcon mapImage;
+	
+	/**
+	 * 内容区域的背景图片
+	 * */
+	JLabel imageBackground;
 	
 	//====================methods====================
 	
@@ -88,7 +105,8 @@ public class DesignerMainFrame extends JFrame{
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);				//启动时最大化窗体
 		
 		initMenu();
-		initLeftPanel();
+		initPanel();
+		initBackgroundImage();
 		
 		this.toolBar = new JToolBar("工具栏");
 		this.add(this.toolBar, BorderLayout.NORTH);
@@ -112,9 +130,10 @@ public class DesignerMainFrame extends JFrame{
 	    	if(file != null && returnVal !=1) {					//选择文件
 	    		System.out.println(returnVal);
 	        	System.out.println(file.getPath() + file.getName());
+	        	changeBackground(file.getPath());
 	    	}
 	    	else {
-    		System.out.println(returnVal);
+	    		System.out.println(returnVal);
 	    	}
 		});
 		fileMenu.add(loadImageFile);
@@ -131,7 +150,7 @@ public class DesignerMainFrame extends JFrame{
 	/**
 	 * 加载左边栏
 	 * */
-	private void initLeftPanel() {
+	private void initPanel() {
 		this.mainPanel = new JPanel();
 		this.add(this.mainPanel, BorderLayout.CENTER);
 		GridBagLayout bagLayout = new GridBagLayout();
@@ -141,6 +160,7 @@ public class DesignerMainFrame extends JFrame{
 		this.mainPanel.setLayout(bagLayout);
 		
 		this.leftPanel = new JPanel();
+		this.leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		BoxLayout boxLayout=new BoxLayout(this.leftPanel, BoxLayout.Y_AXIS); 
 		this.leftPanel.setLayout(boxLayout);
 		this.mainPanel.add(leftPanel);
@@ -155,6 +175,7 @@ public class DesignerMainFrame extends JFrame{
 		bagLayout.setConstraints(leftPanel, bagConstraints);
 		
 		this.contextPanle = new JPanel();
+		this.contextPanle.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		this.mainPanel.add(contextPanle);
 		this.contextPanle.add(new JButton("222222"));
 		this.contextPanle.setBackground(Color.white);
@@ -165,16 +186,39 @@ public class DesignerMainFrame extends JFrame{
 		bagConstraints.weightx = 1;
 		bagLayout.setConstraints(contextPanle, bagConstraints);
 		
-		this.lineToButton = new JButton("------------------");
-		//this.lineToButton.setSize(100, 30);
-		this.leftPanel.add(this.lineToButton);
-		
-		this.leftPanelTools = new JPanel();
-		this.leftPanel.add(this.leftPanelTools);
+		this.lineToButton = new JButton("----------");
+		this.lineToButton.setMinimumSize(new Dimension(200, 100));
+		JPanel lineToPanel = new JPanel();
+		lineToPanel.setMinimumSize(new Dimension(150, 100));
+		lineToPanel.setMaximumSize(new Dimension(150, 100));
+		this.leftPanel.add(lineToPanel);
+		lineToPanel.add(this.lineToButton);
+		this.leftPanel.add(Box.createVerticalStrut(5));
+		JPanel leftPanelTools = new JPanel();
+		leftPanelTools.setMinimumSize(new Dimension(150, 100));
+		leftPanelTools.setMaximumSize(new Dimension(150, 100));
+		leftPanelTools.setLayout(new GridLayout(1, 2));
+		this.leftPanel.add(leftPanelTools);
 		this.addNodeTemplateButton = new JButton("添加");
-		this.leftPanelTools.add(this.addNodeTemplateButton);
+		leftPanelTools.add(this.addNodeTemplateButton);
 		this.removeNodeTemplateButton = new JButton("移除");
-		this.leftPanelTools.add(this.removeNodeTemplateButton);
+		leftPanelTools.add(this.removeNodeTemplateButton);
+		this.leftPanel.add(Box.createVerticalStrut(5));
+		this.nodeScrollPane = new JScrollPane();
+		this.leftPanel.add(this.nodeScrollPane);
+	}
+	
+	private void initBackgroundImage() {
+		this.imageBackground = new JLabel();
+		this.contextPanle.setLayout(null);
+		this.contextPanle.add(this.imageBackground, -1);
+	}
+	
+	private void changeBackground(String imagePath) {
+		if (imagePath != null && !"".equals(imagePath)) {
+			this.mapImage = new ImageIcon(imagePath);
+			this.imageBackground.setIcon(mapImage);
+		}
 	}
 	
 }
