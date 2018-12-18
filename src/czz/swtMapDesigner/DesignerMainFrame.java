@@ -46,6 +46,11 @@ public class DesignerMainFrame extends JFrame{
 	JToolBar toolBar;
 	
 	/**
+	 * 工具栏-打开图片
+	 * */
+	JButton openImageTB;
+	
+	/**
 	 * 全局Panel
 	 * */
 	JPanel mainPanel;
@@ -78,7 +83,7 @@ public class DesignerMainFrame extends JFrame{
 	/**
 	 * 内容区
 	 * */
-	JPanel contextPanle;
+	JScrollPane contextPanle;
 	
 	/**
 	 * 地图图片
@@ -88,7 +93,7 @@ public class DesignerMainFrame extends JFrame{
 	/**
 	 * 内容区域的背景图片
 	 * */
-	JLabel imageBackground;
+	JLabel imageBackgroundLabel;
 	
 	//====================methods====================
 	
@@ -105,12 +110,8 @@ public class DesignerMainFrame extends JFrame{
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);				//启动时最大化窗体
 		
 		initMenu();
+		initToolBar();
 		initPanel();
-		initBackgroundImage();
-		
-		this.toolBar = new JToolBar("工具栏");
-		this.add(this.toolBar, BorderLayout.NORTH);
-		this.toolBar.add(new JButton("000000"));
 	}
 	
 	/**
@@ -119,23 +120,11 @@ public class DesignerMainFrame extends JFrame{
 	private void initMenu() {
 		this.menuBar = new JMenuBar();
 		this.setJMenuBar(this.menuBar);
-		JMenu fileMenu = new JMenu("文件");			//文件菜单
+		JMenu fileMenu = new JMenu("文件(F)");			//文件菜单
+		fileMenu.setMnemonic('F');
 		this.menuBar.add(fileMenu);
 		JMenuItem loadImageFile = new JMenuItem("加载图片");
-		loadImageFile.addActionListener(e -> {
-			JFileChooser fc = new JFileChooser();
-	    	fc.addChoosableFileFilter(new FileNameExtensionFilter("图片文件(jpg, bmp, png)", "jpg", "bmp", "png"));
-	    	int returnVal = fc.showOpenDialog(this);		//0选择1取消
-	    	File file = fc.getSelectedFile();
-	    	if(file != null && returnVal !=1) {					//选择文件
-	    		System.out.println(returnVal);
-	        	System.out.println(file.getPath() + file.getName());
-	        	changeBackground(file.getPath());
-	    	}
-	    	else {
-	    		System.out.println(returnVal);
-	    	}
-		});
+		loadImageFile.addActionListener(e -> openImage_action());
 		fileMenu.add(loadImageFile);
 		fileMenu.addSeparator();
 		JMenuItem exitMenu = new JMenuItem("退出(X)");
@@ -145,6 +134,15 @@ public class DesignerMainFrame extends JFrame{
         	if(option == JOptionPane.YES_OPTION) System.exit(0); 
 	    });
 		fileMenu.add(exitMenu);
+	}
+	
+	private void initToolBar() {
+		this.toolBar = new JToolBar("工具栏");
+		this.add(this.toolBar, BorderLayout.NORTH);
+		ImageIcon openImageIcon = new ImageIcon("source/icon/Picture.png");
+		this.openImageTB = new JButton(openImageIcon);
+		this.openImageTB.addActionListener(e -> openImage_action());
+		this.toolBar.add(openImageTB);
 	}
 	
 	/**
@@ -174,11 +172,10 @@ public class DesignerMainFrame extends JFrame{
 		bagConstraints.weightx = 0;
 		bagLayout.setConstraints(leftPanel, bagConstraints);
 		
-		this.contextPanle = new JPanel();
+		this.contextPanle = new JScrollPane();
 		this.contextPanle.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		this.mainPanel.add(contextPanle);
-		this.contextPanle.add(new JButton("222222"));
-		this.contextPanle.setBackground(Color.white);
+		this.contextPanle.setBackground(Color.GRAY);
 		bagConstraints.gridy = 0;
 		bagConstraints.gridx = 1;
 		bagConstraints.gridheight = 1;
@@ -206,19 +203,39 @@ public class DesignerMainFrame extends JFrame{
 		this.leftPanel.add(Box.createVerticalStrut(5));
 		this.nodeScrollPane = new JScrollPane();
 		this.leftPanel.add(this.nodeScrollPane);
-	}
-	
-	private void initBackgroundImage() {
-		this.imageBackground = new JLabel();
-		this.contextPanle.setLayout(null);
-		this.contextPanle.add(this.imageBackground, -1);
+		
+		this.imageBackgroundLabel = new JLabel();
+		this.contextPanle.setViewportView(this.imageBackgroundLabel);
 	}
 	
 	private void changeBackground(String imagePath) {
 		if (imagePath != null && !"".equals(imagePath)) {
 			this.mapImage = new ImageIcon(imagePath);
-			this.imageBackground.setIcon(mapImage);
+			if (this.mapImage != null) {
+				this.imageBackgroundLabel.setBounds(0, 0, this.mapImage.getIconWidth(), this.mapImage.getIconHeight());
+				this.imageBackgroundLabel.setIcon(mapImage);
+				this.imageBackgroundLabel.setVerticalAlignment(JLabel.NORTH);
+			}
 		}
 	}
 	
+	/**
+	 * 打开图片操作
+	 * */
+	private void openImage_action() {
+		JFileChooser fc = new JFileChooser();
+    	fc.addChoosableFileFilter(new FileNameExtensionFilter("图片文件(jpg, bmp, png)", "jpg", "bmp", "png"));
+    	File imageDir = new File("source/image");
+    	fc.setCurrentDirectory(imageDir);
+    	int returnVal = fc.showOpenDialog(this);		//0选择1取消
+    	File file = fc.getSelectedFile();
+    	if(file != null && returnVal !=1) {					//选择文件
+    		System.out.println(returnVal);
+        	System.out.println(file.getPath() + file.getName());
+        	changeBackground(file.getPath());
+    	}
+    	else {
+    		System.out.println(returnVal);
+    	}
+	}
 }
