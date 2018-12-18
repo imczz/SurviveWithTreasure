@@ -6,16 +6,19 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -81,6 +84,16 @@ public class DesignerMainFrame extends JFrame{
 	JScrollPane nodeScrollPane;
 	
 	/**
+	 * 节点模板列表
+	 * */
+	JList<JButton> nodeTemplateList;
+	
+	/**
+	 * 节点模板列表
+	 * */
+	DefaultListModel<JButton> listModel;
+	
+	/**
 	 * 内容区
 	 * */
 	JScrollPane contextPanle;
@@ -140,6 +153,7 @@ public class DesignerMainFrame extends JFrame{
 		this.toolBar = new JToolBar("工具栏");
 		this.add(this.toolBar, BorderLayout.NORTH);
 		ImageIcon openImageIcon = new ImageIcon("source/icon/Picture.png");
+		openImageIcon.setImage(openImageIcon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
 		this.openImageTB = new JButton(openImageIcon);
 		this.openImageTB.addActionListener(e -> openImage_action());
 		this.toolBar.add(openImageTB);
@@ -206,6 +220,16 @@ public class DesignerMainFrame extends JFrame{
 		
 		this.imageBackgroundLabel = new JLabel();
 		this.contextPanle.setViewportView(this.imageBackgroundLabel);
+		
+		this.nodeTemplateList = new JList<JButton>();
+		this.nodeScrollPane.setViewportView(this.nodeTemplateList);
+		this.nodeTemplateList.setBounds(0, 0, 100, 300);
+		this.listModel = new DefaultListModel<JButton>();
+		this.addNodeTemplateButton.addActionListener(e -> {
+			JButton bt = new JButton("123123");
+			listModel.addElement(bt);
+			this.nodeTemplateList.setModel(listModel);
+		});
 	}
 	
 	private void changeBackground(String imagePath) {
