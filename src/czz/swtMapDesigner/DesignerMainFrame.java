@@ -3,6 +3,7 @@ package czz.swtMapDesigner;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -74,6 +75,11 @@ public class DesignerMainFrame extends JFrame{
 	JButton addNodeTemplateButton;
 	
 	/**
+	 * 编辑节点模板
+	 * */
+	JButton editNodeTemplateButton;
+	
+	/**
 	 * 移除节点模板
 	 * */
 	JButton removeNodeTemplateButton;
@@ -86,12 +92,12 @@ public class DesignerMainFrame extends JFrame{
 	/**
 	 * 节点模板列表
 	 * */
-	JList<JButton> nodeTemplateList;
+	JList<NodeTemplate> nodeTemplateList;
 	
 	/**
 	 * 节点模板列表
 	 * */
-	DefaultListModel<JButton> listModel;
+	DefaultListModel<NodeTemplate> listModel;
 	
 	/**
 	 * 内容区
@@ -206,12 +212,14 @@ public class DesignerMainFrame extends JFrame{
 		lineToPanel.add(this.lineToButton);
 		this.leftPanel.add(Box.createVerticalStrut(5));
 		JPanel leftPanelTools = new JPanel();
-		leftPanelTools.setMinimumSize(new Dimension(150, 100));
-		leftPanelTools.setMaximumSize(new Dimension(150, 100));
+		leftPanelTools.setMinimumSize(new Dimension(200, 100));
+		leftPanelTools.setMaximumSize(new Dimension(200, 100));
 		leftPanelTools.setLayout(new GridLayout(1, 2));
 		this.leftPanel.add(leftPanelTools);
 		this.addNodeTemplateButton = new JButton("添加");
 		leftPanelTools.add(this.addNodeTemplateButton);
+		this.editNodeTemplateButton = new JButton("编辑");
+		leftPanelTools.add(this.editNodeTemplateButton);
 		this.removeNodeTemplateButton = new JButton("移除");
 		leftPanelTools.add(this.removeNodeTemplateButton);
 		this.leftPanel.add(Box.createVerticalStrut(5));
@@ -221,14 +229,32 @@ public class DesignerMainFrame extends JFrame{
 		this.imageBackgroundLabel = new JLabel();
 		this.contextPanle.setViewportView(this.imageBackgroundLabel);
 		
-		this.nodeTemplateList = new JList<JButton>();
+		this.nodeTemplateList = new JList<NodeTemplate>();
 		this.nodeScrollPane.setViewportView(this.nodeTemplateList);
 		this.nodeTemplateList.setBounds(0, 0, 100, 300);
-		this.listModel = new DefaultListModel<JButton>();
+		this.nodeTemplateList.setCellRenderer(new NodeModelListCellRenderer());
+		this.nodeTemplateList.setFont(new Font(Font.SERIF, Font.PLAIN, 18));
+		this.listModel = new DefaultListModel<NodeTemplate>();
 		this.addNodeTemplateButton.addActionListener(e -> {
-			JButton bt = new JButton("123123");
-			listModel.addElement(bt);
+			NodeTemplate node = new NodeTemplate(1, "2", mapImage);
+			listModel.addElement(node);
 			this.nodeTemplateList.setModel(listModel);
+		});
+		
+		this.editNodeTemplateButton.addActionListener(e -> {
+			int index = this.nodeTemplateList.getSelectedIndex();
+			if (index >= 0) {
+				listModel.getElementAt(index).id = 3;
+				this.nodeTemplateList.setModel(listModel);
+			}
+		});
+		
+		this.removeNodeTemplateButton.addActionListener(e -> {
+			int index = this.nodeTemplateList.getSelectedIndex();
+			if (index >= 0) {
+				listModel.removeElementAt(index);
+				this.nodeTemplateList.setModel(listModel);
+			}
 		});
 	}
 	
