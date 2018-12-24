@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,6 +27,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -236,7 +238,10 @@ public class DesignerMainFrame extends JFrame{
 		this.nodeTemplateList.setFont(new Font(Font.SERIF, Font.PLAIN, 18));
 		this.listModel = new DefaultListModel<NodeTemplate>();
 		this.addNodeTemplateButton.addActionListener(e -> {
-			NodeTemplate node = new NodeTemplate(1, "2", mapImage);
+			NodeTemplate node = new NodeTemplate();
+			NodeEditDialog nodeEditDialog = new NodeEditDialog(this, node);
+			nodeEditDialog.setModal(true);
+			nodeEditDialog.setVisible(true);
 			listModel.addElement(node);
 			this.nodeTemplateList.setModel(listModel);
 		});
@@ -244,7 +249,9 @@ public class DesignerMainFrame extends JFrame{
 		this.editNodeTemplateButton.addActionListener(e -> {
 			int index = this.nodeTemplateList.getSelectedIndex();
 			if (index >= 0) {
-				listModel.getElementAt(index).id = 3;
+				NodeEditDialog nodeEditDialog = new NodeEditDialog(this, listModel.getElementAt(index));
+				nodeEditDialog.setModal(true);
+				nodeEditDialog.setVisible(true);
 				this.nodeTemplateList.setModel(listModel);
 			}
 		});
@@ -288,4 +295,97 @@ public class DesignerMainFrame extends JFrame{
     		System.out.println(returnVal);
     	}
 	}
+}
+
+/**
+ * 节点编辑器类
+ * @author CZZ
+ * */
+class NodeEditDialog extends JDialog {
+
+    /**
+	 * 序列化ID
+	 */
+	private static final long serialVersionUID = 3596621668052690347L;
+
+	/**
+	 * 对应的节点
+	 * */
+	NodeTemplate node;
+	
+	JTextField idText;
+	
+	JTextField nameText;
+	
+	JLabel icon;
+	
+	final JButton iconButton = new JButton("选择图标");
+	
+	final JButton okButton = new JButton("确定");
+	
+	final JButton cancelButton = new JButton("取消");
+	
+	//====================methods====================
+	
+	public NodeEditDialog(DesignerMainFrame frame, NodeTemplate node){
+        super(frame,"节点模板",true);
+        this.setIconImage(null);
+        this.setLayout(new GridLayout(4, 2));
+        this.node = node;
+        this.add(new JLabel("ID"));
+        idText = new JTextField(10);
+        this.add(idText);
+        this.add(new JLabel("name"));
+        nameText = new JTextField(30);
+        this.add(nameText);
+        icon = new JLabel();
+        //icon.setPreferredSize(new Dimension(100, 100));
+        this.add(icon);
+        this.add(iconButton);
+        this.add(okButton);
+        this.add(cancelButton);
+        if (this.node != null) {
+        	this.idText.setText(Integer.valueOf(node.id).toString());
+        	this.nameText.setText(node.name);
+        	if (node.icon != null) {
+        		Image img = node.icon.getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT); 	
+				this.icon.setIcon(new ImageIcon(img));//设置JLable的图片
+        	}
+        }
+        setSize(200, 400);
+        
+        this.iconButton.addActionListener(e -> {
+        	JFileChooser fc = new JFileChooser();
+        	fc.addChoosableFileFilter(new FileNameExtensionFilter("图片文件(jpg, bmp, png)", "jpg", "bmp", "png"));
+        	File imageDir = new File("source/image");
+        	fc.setCurrentDirectory(imageDir);
+        	int returnVal = fc.showOpenDialog(this);		//0选择1取消
+        	File file = fc.getSelectedFile();
+        	if(file != null && returnVal !=1) {					//选择文件
+        		System.out.println(returnVal);
+            	System.out.println(file.getPath() + file.getName());
+            	ImageIcon imageIcon = new ImageIcon(file.getPath());
+            	imageIcon.setImage(imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+    			this.icon.setIcon(imageIcon);
+        	}
+        	else {
+        		System.out.println(returnVal);
+        	}
+        });
+        
+        this.okButton.addActionListener(e -> {
+        	if (this.nameText.getText() != null && !"".equals(this.nameText.getText())) {
+        		this.node.id = Integer.parseInt(this.idText.getText());
+        		this.node.name = this.nameText.getText();
+        		this.node.icon = (ImageIcon) this.icon.getIcon();
+        		this.dispose();
+        	} else {
+        		System.out.println("名称为空");
+        	}
+        });
+        
+        this.cancelButton.addActionListener(e -> {
+        	this.dispose();
+        });
+    }
 }
