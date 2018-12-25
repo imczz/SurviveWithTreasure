@@ -8,6 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -242,8 +243,10 @@ public class DesignerMainFrame extends JFrame{
 			NodeEditDialog nodeEditDialog = new NodeEditDialog(this, node);
 			nodeEditDialog.setModal(true);
 			nodeEditDialog.setVisible(true);
-			listModel.addElement(node);
-			this.nodeTemplateList.setModel(listModel);
+			if (node.name != null) {
+				listModel.addElement(node);
+				this.nodeTemplateList.setModel(listModel);
+			}
 		});
 		
 		this.editNodeTemplateButton.addActionListener(e -> {
@@ -313,16 +316,39 @@ class NodeEditDialog extends JDialog {
 	 * */
 	NodeTemplate node;
 	
+	/**
+	 * id输入
+	 * */
 	JTextField idText;
 	
+	/**
+	 * 名字提示文本
+	 * */
+	final JLabel nameLabel = new JLabel("名称");
+	
+	/**
+	 * 名字输入
+	 * */
 	JTextField nameText;
 	
+	/**
+	 * 图标展示
+	 * */
 	JLabel icon;
 	
+	/**
+	 * 选择图标文件按钮
+	 * */
 	final JButton iconButton = new JButton("选择图标");
 	
+	/**
+	 * 确定按钮
+	 * */
 	final JButton okButton = new JButton("确定");
 	
+	/**
+	 * 取消按钮
+	 * */
 	final JButton cancelButton = new JButton("取消");
 	
 	//====================methods====================
@@ -335,7 +361,7 @@ class NodeEditDialog extends JDialog {
         this.add(new JLabel("ID"));
         idText = new JTextField(10);
         this.add(idText);
-        this.add(new JLabel("name"));
+        this.add(this.nameLabel);
         nameText = new JTextField(30);
         this.add(nameText);
         icon = new JLabel();
@@ -352,7 +378,11 @@ class NodeEditDialog extends JDialog {
 				this.icon.setIcon(new ImageIcon(img));//设置JLable的图片
         	}
         }
-        setSize(200, 400);
+        int width = 200;
+        int height = 400;
+        int x = (Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2;
+        int y = (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 2;
+        this.setBounds(x, y, width, height);
         
         this.iconButton.addActionListener(e -> {
         	JFileChooser fc = new JFileChooser();
@@ -380,6 +410,8 @@ class NodeEditDialog extends JDialog {
         		this.node.icon = (ImageIcon) this.icon.getIcon();
         		this.dispose();
         	} else {
+        		this.nameLabel.setText("名称（必填）");
+        		this.nameLabel.repaint();
         		System.out.println("名称为空");
         	}
         });
