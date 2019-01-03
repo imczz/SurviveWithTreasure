@@ -63,7 +63,7 @@ public abstract class AutomataMachine {
 	 * */
 	public AutomataMachine(){
 		useable = 0;
-		state=0;
+		state = 0;
 		Q = new ArrayList<Integer>();
 		end_state = new ArrayList<Integer>();
 		sigma = new ArrayList<Character>();
@@ -72,6 +72,7 @@ public abstract class AutomataMachine {
 	/**
 	 * （抽象）接收一个字符
 	 * @param ch 待接收的字符
+	 * @return >0当前状态，<0当前状态的负数（返还终结符给下一个自动机），0错误
 	 * */
 	abstract public int getchar(char ch);
 	

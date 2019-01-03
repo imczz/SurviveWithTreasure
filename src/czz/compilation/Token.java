@@ -4,7 +4,7 @@ package czz.compilation;
  * 单个token,采用2级结构
  * @author CZZ
  * */
-public class token {
+public class Token {
 	
 	/**
 	 * 一级标签（类别）
@@ -82,7 +82,7 @@ public class token {
 	/**
 	 * 构造方法
 	 * */
-	token(){
+	Token(){
 		setIndex1(0);
 		setIndex2(0);
 		ch='\0';
@@ -93,7 +93,7 @@ public class token {
 	/**
 	 * 构造方法2
 	 * */
-	public token(int index1, int index2, String str){				//简易的构造方法
+	public Token(int index1, int index2, String str){				//简易的构造方法
 		setIndex1(index1);
 		setIndex2(index2);
 		this.setStr(str);
@@ -105,7 +105,7 @@ public class token {
 	/**
 	 * 构造方法3
 	 * */
-	public token(int index1, int index2, String str, char c, double num1, int num2){		//复杂的构造方法
+	public Token(int index1, int index2, String str, char c, double num1, int num2){		//复杂的构造方法
 		setIndex1(index1);
 		setIndex2(index2);
 		this.setStr(str);
@@ -117,7 +117,7 @@ public class token {
 	/**
 	 * 复制（拷贝）构造方法
 	 * */
-	token(token t1){
+	Token(Token t1){
 		setIndex1(t1.getIndex1());
 		setIndex2(t1.getIndex2());
 		setStr(t1.getStr());
@@ -131,7 +131,7 @@ public class token {
 	 * @param t1 另一个token
 	 * @return true 两个token相同;false 两个token不同
 	 * */
-	public boolean equals(token t1){
+	public boolean equals(Token t1){
 		if(getIndex1()==t1.getIndex1() && getIndex2()==t1.getIndex2() && getStr()==t1.getStr()) return true;
 		else return false;
 	}
@@ -141,7 +141,7 @@ public class token {
 	 * @param t1 另一个token
 	 * @return true 两个token的来源字符串相同;false 两个token的来源字符串不同
 	 * */
-	public boolean equalstr(token t1){
+	public boolean equalstr(Token t1){
 		if(getStr()==t1.getStr()) return true;
 		else return false;
 	}
@@ -160,8 +160,8 @@ public class token {
 	 * @param str 表示数字的字符串
 	 * @return 代表数字的token
 	 * */
-	public static token StrToNum(String str){
-		token tmp = new token(3, 0, str, '\0', 0, 0);		//3代表数字；index2以后再改变
+	public static Token StrToNum(String str){
+		Token tmp = new Token(3, 0, str, '\0', 0, 0);		//3代表数字；index2以后再改变
 		char tmpch=0;
 		int flag1=0;
 		double f2=10;
