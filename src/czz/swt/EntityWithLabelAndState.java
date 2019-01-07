@@ -32,8 +32,8 @@ public abstract class EntityWithLabelAndState extends Entity{
 	/**
 	 * 构造方法2
 	 * */
-	public EntityWithLabelAndState(int id, String name) {
-		super(id, name);
+	public EntityWithLabelAndState(int id, String name, String note) {
+		super(id, name, note);
 		labels = new ConcurrentHashMap<Integer, Label>();
 		states = new ConcurrentHashMap<Integer, State>();
 	}

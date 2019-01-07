@@ -23,7 +23,7 @@ public class PlaceNode extends EntityWithLabelAndState{
 	 * @param name 节点的名称
 	 * */
 	public PlaceNode(int id, String name) {
-		super(id, name);
+		super(id, name, null);
 	}
 	
 }

@@ -36,7 +36,7 @@ public class Group extends EntityWithLabelAndState{
 	 * @param name 节点的名称
 	 * */
 	public Group(Engine engine, int id, String name) {
-		super(id, name);
+		super(id, name, null);
 		this.storage = new Storage();
 	}
 	

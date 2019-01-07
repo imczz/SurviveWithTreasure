@@ -26,7 +26,7 @@ public class Commodity extends Entity{
 	 * @param name 商品名称
 	 * */
 	public Commodity(int id, String name) {
-		super(id, name);
+		super(id, name, null);
 		this.resBag = new ResBag();
 	}
 	
@@ -36,8 +36,8 @@ public class Commodity extends Entity{
 	 * @param name 商品名称
 	 * @param resBag 资源背包
 	 * */
-	public Commodity(int id, String name, ResBag resBag) {
-		super(id, name);
+	public Commodity(int id, String name, ResBag resBag, String note) {
+		super(id, name, note);
 		this.resBag = new ResBag(resBag);
 	}
 	

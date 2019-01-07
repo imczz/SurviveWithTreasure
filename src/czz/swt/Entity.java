@@ -16,6 +16,11 @@ public abstract class Entity{
 	 * */
 	protected String name;
 	
+	/**
+	 * 实体的注释文本
+	 * */
+	protected String note;
+	
 	//====================methods====================
 	
 	public int getId() {
@@ -23,11 +28,19 @@ public abstract class Entity{
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getNote() {
+		return this.note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 	
 	/**
@@ -35,14 +48,24 @@ public abstract class Entity{
 	 * */
 	public Entity(int id) {
 		this.id = id;
+		this.name = null;
+		this.note = null;
 	}
 	
 	/**
 	 * 构造方法2
 	 * */
-	public Entity(int id, String name) {
+	public Entity(int id, String name, String note) {
 		this.id = id;
 		this.name = name;
+		this.note = note;
+	}
+	
+	/**
+	 * 获取类型的名字
+	 * */
+	protected String getTypeName() {
+		return "实体";
 	}
 	
 	/**
@@ -52,7 +75,7 @@ public abstract class Entity{
 	public String toString() {
 		String ret = name;
 		if (ret == null || ret.equals("")) {
-			ret = "实体" + id;
+			ret = getTypeName() + id;
 		}
 		return ret;
 	}

@@ -4,36 +4,14 @@ package czz.swt;
  * 标签，标签是某种范围的事物具有的标志
  * @author CZZ
  * */
-public class Label {
-
-	/**
-	 * 标签的id
-	 * */
-	private int id;
+public class Label extends Entity{
 	
 	/**
-	 * 标签的名称
+	 * 数值
 	 * */
-	private String name;
-	
-	/**
-	 * 标签的数值
-	 * */
-	private Float value;
+	protected Float value;
 
 	//====================methods====================
-	
-	public int getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 	
 	public Float getValue() {
 		return value;
@@ -48,7 +26,7 @@ public class Label {
 	 * @param id 标签的id号
 	 * */
 	public Label(int id) {
-		this.id = id;
+		super(id);
 		this.value = 0f;
 	}
 	
@@ -58,17 +36,16 @@ public class Label {
 	 * @param name 标签的名称
 	 * */
 	public Label(int id, String name, Float value) {
-		this.id = id;
-		this.name = name;
+		super(id, name, null);
 		this.value = value;
 	}
 	
 	/**
-	 * 获取状态的（提供给用户看的）名字
+	 * 获取类型的名字
 	 * */
-	public String toString() {
-		String ret = name;
-		if (ret != null && !ret.isEmpty()) ret = "标签" + this.id;
-		return ret;
+	@Override
+	protected String getTypeName() {
+		return "标签";
 	}
+	
 }

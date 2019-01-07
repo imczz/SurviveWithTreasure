@@ -69,7 +69,7 @@ public class ResDefine extends Entity{
 	 * @param unit 计量资源的单位
 	 * */
 	public ResDefine(int id, String name, String unit) {
-		super(id, name);
+		super(id, name, null);
 		this.unit = unit;
 		this.isConsumable =false;
 		this.maxUseTime = -1;				//负数代表无限次使用
@@ -89,9 +89,9 @@ public class ResDefine extends Entity{
 	 * @param demand 此资源需要占用的资源
 	 * @param storage 此资源包含存储空间
 	 * */
-	public ResDefine(int id, String name, String unit, boolean isConsumable, int maxUseTime, 
+	public ResDefine(int id, String name, String unit, String note, boolean isConsumable, int maxUseTime, 
 			Offer offer, Demand demand, Storage storage) {
-		super(id, name);
+		super(id, name, note);
 		this.unit = unit;
 		this.isConsumable = isConsumable;
 		this.maxUseTime = maxUseTime;
