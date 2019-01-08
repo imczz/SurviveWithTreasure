@@ -9,6 +9,10 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
+/**
+ * 自定义的可以显示图标和文本的JList渲染器
+ * @author CZZ
+ * */
 public class NodeModelListCellRenderer extends DefaultListCellRenderer {
 
 	/**

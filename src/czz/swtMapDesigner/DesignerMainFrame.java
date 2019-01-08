@@ -33,7 +33,8 @@ import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
- * 编辑器主窗体
+ * 地图编辑器主窗体
+ * @author CZZ
  * */
 public class DesignerMainFrame extends JFrame{
 

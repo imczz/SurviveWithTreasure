@@ -2,12 +2,25 @@ package czz.swtMapDesigner;
 
 import javax.swing.ImageIcon;
 
+/**
+ * 节点模板，作为JList的元素
+ * @author CZZ
+ * */
 public class NodeTemplate {
 
+	/**
+	 * 节点id
+	 * */
 	int id;
 	
+	/**
+	 * 节点名
+	 * */
 	String name;
 	
+	/**
+	 * 展示图标
+	 * */
 	ImageIcon icon;
 
 	//====================methods====================
