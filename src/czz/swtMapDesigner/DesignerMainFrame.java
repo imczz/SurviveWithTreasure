@@ -116,7 +116,7 @@ public class DesignerMainFrame extends JFrame{
 	/**
 	 * 内容区域的背景图片
 	 * */
-	JLabel imageBackgroundLabel;
+	ImageCanvas imageBackgroundLabel;
 	
 	//====================methods====================
 	
@@ -230,7 +230,7 @@ public class DesignerMainFrame extends JFrame{
 		this.nodeScrollPane = new JScrollPane();
 		this.leftPanel.add(this.nodeScrollPane);
 		
-		this.imageBackgroundLabel = new JLabel();
+		this.imageBackgroundLabel = new ImageCanvas();
 		this.contextPanle.setViewportView(this.imageBackgroundLabel);
 		
 		this.nodeTemplateList = new JList<NodeTemplate>();

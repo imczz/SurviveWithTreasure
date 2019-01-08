@@ -27,6 +27,9 @@ public class SettingTable {
 	
 	//====================methods====================
 	
+	/**
+	 * 构造方法
+	 * */
 	public SettingTable() {
 		resSet = new HashMap<Integer, ResDefine>();
 		labels = new HashMap<String, List<Label> >();
