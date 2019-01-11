@@ -32,6 +32,8 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import czz.swtMapDesigner.ImageCanvas.ToolState;
+
 /**
  * 地图编辑器主窗体
  * @author CZZ
@@ -231,6 +233,7 @@ public class DesignerMainFrame extends JFrame{
 		this.leftPanel.add(this.nodeScrollPane);
 		
 		this.imageBackgroundLabel = new ImageCanvas();
+		this.imageBackgroundLabel.setToolState(ImageCanvas.ToolState.Point);
 		this.contextPanle.setViewportView(this.imageBackgroundLabel);
 		
 		this.nodeTemplateList = new JList<NodeTemplate>();
