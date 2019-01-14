@@ -1,30 +1,21 @@
-package czz.swtMapDesigner;
+package czz.canvas;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import javax.swing.JLabel;
-
-import czz.graph.Graph;
 import czz.swt.PlaceNode;
+import czz.swtMapDesigner.EdgeLine;
+import czz.swtMapDesigner.NodePoint;
 
 /**
- * 绘图画布，在画布上可以描点连线
+ * 画布
  * @author CZZ
  * */
-public class ImageCanvas extends JLabel{
+public class Canvas {
 
 	/**
 	 * 画布工具状态枚举类型
@@ -32,118 +23,66 @@ public class ImageCanvas extends JLabel{
 	public static enum ToolState {Select, Point, Line};
 	
 	/**
-	 * 序列化ID
-	 */
-	private static final long serialVersionUID = -854776518703564180L;
-
-	/**
 	 * 节点列表
 	 * */
-	private HashMap<Integer, NodePoint<PlaceNode>> nodeMap;
+	protected HashMap<Integer, NodePoint<PlaceNode>> nodeMap;
 	
 	/**
 	 * 被选中的节点列表
 	 * */
-	private HashSet<Integer> selectNode;
+	protected HashSet<Integer> selectNode;
 	
 	/**
 	 * 边列表
 	 * */
-	private HashMap<Integer, ArrayList<EdgeLine<Integer>>> edgeList;
+	protected HashMap<Integer, ArrayList<EdgeLine<Integer>>> edgeList;
 	
 	/**
 	 * 编号递增
 	 * */
-	private int index;
+	protected int index;
 	
 	/**
 	 * 画布工具状态
 	 * */
-	private ToolState toolState;
-	
-	/**
-	 * 绑定的图
-	 * */
-	private Graph<Integer> graph;
+	protected ToolState toolState;
 	
 	//====================methods====================
 	
 	public ToolState getToolState() {
-		return toolState;
+		return this.toolState;
 	}
 
 	public void setToolState(ToolState toolState) {
 		this.toolState = toolState;
 	}
-
+	
 	/**
 	 * 构造方法
 	 * */
-	public ImageCanvas() {
+	public Canvas() {
 		this.index = 0;
 		this.nodeMap = new HashMap<Integer, NodePoint<PlaceNode>>();
 		this.selectNode = new HashSet<Integer>();
 		this.toolState = ToolState.Select;
-		this.graph = new Graph<Integer>();
-		CanvasMouseListener mouseListener = new CanvasMouseListener(this);
-		this.addMouseListener(mouseListener);
+	}
+	
+	public int getIndex() {
+		return this.index;
 	}
 	
 	/**
-	 * 绘图函数
+	 * 设置index的值
+	 * @param index 待设置的index
+	 * @return true设置成功;false设置失败(index已被占用)
 	 * */
-	@Override
-	public void paint(Graphics g) 
-	{
-		super.paint(g);
-		Graphics2D g2 = (Graphics2D) g; 
-		Iterator<Entry<Integer, NodePoint<PlaceNode>>> iter = nodeMap.entrySet().iterator();
-		Entry<Integer, NodePoint<PlaceNode>> entry = null;
-		double px, py;
-		double r = 4;
-		NodePoint<PlaceNode> placeNode = null;
-		Color backgroundColor = null;
-		Color borderColor = null;
-		Color fontColor = null;
-		Font font = null;
-		while (iter.hasNext()) {
-			entry = iter.next();
-			placeNode = entry.getValue();
-			px = placeNode.getX();
-			py = placeNode.getY();
-			r = placeNode.getR();
-			if (px < 0 || py < 0 || r < 0) continue;
-			Ellipse2D ellipse=new Ellipse2D.Double(px - r, py - r, 2 * r, 2 * r);
-			font = placeNode.getIndexFont();
-			if (this.selectNode.contains(placeNode.getIndex())) {
-				backgroundColor = placeNode.getSelectBbackgroundColor();
-				borderColor = placeNode.getSelectBorderColor();
-				fontColor = placeNode.getSelectFontColor();
-			} else {
-				backgroundColor = placeNode.getBackgroundColor();
-				borderColor = placeNode.getBorderColor();
-				fontColor = placeNode.getFontColor();
-			}
-			if (backgroundColor != null) {				//先画背景
-				g2.setColor(backgroundColor);
-				g2.fill(ellipse);
-			}
-			if (font != null && fontColor != null) {	//再画文字
-				g2.setFont(font);
-				g2.setColor(fontColor);
-				FontMetrics fm = this.getFontMetrics(font);
-				String indexString = Integer.valueOf(placeNode.getIndex()).toString();
-				int fontHeight = (int) (fm.getHeight() * 0.6);
-				int fontWidth = fm.stringWidth(indexString);
-				g2.drawString(indexString, ((int)px) - (fontWidth / 2), ((int)py) + (fontHeight / 2));
-			}
-			if (borderColor != null) {					//最后描边
-				Stroke s = new BasicStroke(placeNode.getBorderWidth(), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
-				g2.setStroke(s); 
-				g2.setColor(borderColor);
-				g2.draw(ellipse);
-			}
+	public boolean setIndex(int index) {
+		boolean ret = false;
+		if (!this.nodeMap.containsKey(index)) {			//index不能设置为已经存在的点的index
+			this.index = index;
+			ret = true;
 		}
+		return ret;
 	}
 	
 	/**
@@ -155,7 +94,7 @@ public class ImageCanvas extends JLabel{
 		Integer nearest = getNearestPoint(x, y);
 		if (nearest == null) {		//周围没有点
 			if (this.toolState == ToolState.Point) {
-				graph.addNode(index, "" + index, index);
+				//graph.addNode(index, "" + index, index);
 				NodePoint<PlaceNode> newNode = new NodePoint<PlaceNode>(null, null, e.getX(), e.getY(), index);
 				nodeMap.put(index, newNode);
 				this.selectNode.clear();
@@ -206,7 +145,7 @@ public class ImageCanvas extends JLabel{
 				}
 			}
 		}
-		this.repaint();
+		//this.repaint();
 	}
 	
 	/**

@@ -14,6 +14,7 @@ import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,10 +30,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import czz.swtMapDesigner.ImageCanvas.ToolState;
 
 /**
  * 地图编辑器主窗体
@@ -48,52 +48,72 @@ public class DesignerMainFrame extends JFrame{
 	/**
 	 * 菜单栏
 	 * */
-	JMenuBar menuBar;
+	final JMenuBar menuBar = new JMenuBar();
 	
 	/**
 	 * 工具栏
 	 * */
-	JToolBar toolBar;
+	final JToolBar toolBar = new JToolBar("工具栏");
 	
 	/**
 	 * 工具栏-打开图片
 	 * */
-	JButton openImageTB;
+	final JButton openImageTB = new JButton();
 	
 	/**
 	 * 全局Panel
 	 * */
-	JPanel mainPanel;
+	final JPanel mainPanel = new JPanel();
 	
 	/**
 	 * 左边栏
 	 * */
-	JPanel leftPanel;
+	final JPanel leftPanel = new JPanel();
 	
 	/**
-	 * 连接两个顶点，形成一条边
+	 * 按钮组
 	 * */
-	JButton lineToButton;
+	final ButtonGroup toggleGroup = new ButtonGroup();
+	
+	/**
+	 * 选择模式单选按钮
+	 * */
+	final JToggleButton selectModeRadio = new JToggleButton("选择模式  △", true);
+	
+	/**
+	 * 节点模式单选按钮
+	 * */
+	final JToggleButton pointModeRadio = new JToggleButton("节点模式  ○");
+	
+	/**
+	 * 连边模式单选按钮
+	 * */
+	final JToggleButton lineModeRadio = new JToggleButton("连边模式  —");
+	
+	/**
+	 * 模板编辑工具框
+	 * */
+	final JPanel leftPanelTools = new JPanel();
 	
 	/**
 	 * 添加节点模板
 	 * */
-	JButton addNodeTemplateButton;
+	final JButton addNodeTemplateButton = new JButton("添加");
 	
 	/**
 	 * 编辑节点模板
 	 * */
-	JButton editNodeTemplateButton;
+	final JButton editNodeTemplateButton = new JButton("编辑");
 	
 	/**
 	 * 移除节点模板
 	 * */
-	JButton removeNodeTemplateButton;
+	final JButton removeNodeTemplateButton = new JButton("移除");
 	
 	/**
 	 * 节点列表的滚动条
 	 * */
-	JScrollPane nodeScrollPane;
+	final JScrollPane nodeScrollPane = new JScrollPane();
 	
 	/**
 	 * 节点模板列表
@@ -108,7 +128,7 @@ public class DesignerMainFrame extends JFrame{
 	/**
 	 * 内容区
 	 * */
-	JScrollPane contextPanle;
+	JScrollPane contextPanle = new JScrollPane();
 	
 	/**
 	 * 地图图片
@@ -118,7 +138,7 @@ public class DesignerMainFrame extends JFrame{
 	/**
 	 * 内容区域的背景图片
 	 * */
-	ImageCanvas imageBackgroundLabel;
+	final ImageCanvas imageBackgroundLabel = new ImageCanvas();;
 	
 	//====================methods====================
 	
@@ -143,7 +163,6 @@ public class DesignerMainFrame extends JFrame{
 	 * 加载菜单栏
 	 * */
 	private void initMenu() {
-		this.menuBar = new JMenuBar();
 		this.setJMenuBar(this.menuBar);
 		JMenu fileMenu = new JMenu("文件(F)");			//文件菜单
 		fileMenu.setMnemonic('F');
@@ -162,11 +181,10 @@ public class DesignerMainFrame extends JFrame{
 	}
 	
 	private void initToolBar() {
-		this.toolBar = new JToolBar("工具栏");
 		this.add(this.toolBar, BorderLayout.NORTH);
 		ImageIcon openImageIcon = new ImageIcon("source/icon/Picture.png");
 		openImageIcon.setImage(openImageIcon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
-		this.openImageTB = new JButton(openImageIcon);
+		this.openImageTB.setIcon(openImageIcon);
 		this.openImageTB.addActionListener(e -> openImage_action());
 		this.toolBar.add(openImageTB);
 	}
@@ -175,7 +193,6 @@ public class DesignerMainFrame extends JFrame{
 	 * 加载左边栏
 	 * */
 	private void initPanel() {
-		this.mainPanel = new JPanel();
 		this.add(this.mainPanel, BorderLayout.CENTER);
 		GridBagLayout bagLayout = new GridBagLayout();
 		GridBagConstraints bagConstraints= new GridBagConstraints();
@@ -183,7 +200,6 @@ public class DesignerMainFrame extends JFrame{
 		bagConstraints.weighty = 1;
 		this.mainPanel.setLayout(bagLayout);
 		
-		this.leftPanel = new JPanel();
 		this.leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		BoxLayout boxLayout=new BoxLayout(this.leftPanel, BoxLayout.Y_AXIS); 
 		this.leftPanel.setLayout(boxLayout);
@@ -209,31 +225,41 @@ public class DesignerMainFrame extends JFrame{
 		bagConstraints.weightx = 1;
 		bagLayout.setConstraints(contextPanle, bagConstraints);
 		
-		this.lineToButton = new JButton("----------");
-		this.lineToButton.setMinimumSize(new Dimension(200, 100));
-		JPanel lineToPanel = new JPanel();
-		lineToPanel.setMinimumSize(new Dimension(150, 100));
-		lineToPanel.setMaximumSize(new Dimension(150, 100));
-		this.leftPanel.add(lineToPanel);
-		lineToPanel.add(this.lineToButton);
+		this.toggleGroup.add(this.selectModeRadio);
+		this.toggleGroup.add(this.pointModeRadio);
+		this.toggleGroup.add(this.lineModeRadio);
+		this.leftPanel.add(this.selectModeRadio);
+		this.leftPanel.add(this.pointModeRadio);
+		this.leftPanel.add(this.lineModeRadio);
+		
+		this.selectModeRadio.addChangeListener(e -> {
+                if (this.selectModeRadio.isSelected()) {
+                	this.imageBackgroundLabel.setToolState(ImageCanvas.ToolState.Select);
+                }
+        });
+		this.pointModeRadio.addChangeListener(e -> {
+            if (this.pointModeRadio.isSelected()) {
+            	this.imageBackgroundLabel.setToolState(ImageCanvas.ToolState.Point);
+            }
+		});
+		this.lineModeRadio.addChangeListener(e -> {
+            if (this.lineModeRadio.isSelected()) {
+            	this.imageBackgroundLabel.setToolState(ImageCanvas.ToolState.Line);
+            }
+		});
+		
 		this.leftPanel.add(Box.createVerticalStrut(5));
-		JPanel leftPanelTools = new JPanel();
+		
 		leftPanelTools.setMinimumSize(new Dimension(200, 100));
 		leftPanelTools.setMaximumSize(new Dimension(200, 100));
 		leftPanelTools.setLayout(new GridLayout(1, 2));
 		this.leftPanel.add(leftPanelTools);
-		this.addNodeTemplateButton = new JButton("添加");
 		leftPanelTools.add(this.addNodeTemplateButton);
-		this.editNodeTemplateButton = new JButton("编辑");
 		leftPanelTools.add(this.editNodeTemplateButton);
-		this.removeNodeTemplateButton = new JButton("移除");
 		leftPanelTools.add(this.removeNodeTemplateButton);
 		this.leftPanel.add(Box.createVerticalStrut(5));
-		this.nodeScrollPane = new JScrollPane();
 		this.leftPanel.add(this.nodeScrollPane);
 		
-		this.imageBackgroundLabel = new ImageCanvas();
-		this.imageBackgroundLabel.setToolState(ImageCanvas.ToolState.Point);
 		this.contextPanle.setViewportView(this.imageBackgroundLabel);
 		
 		this.nodeTemplateList = new JList<NodeTemplate>();
@@ -424,4 +450,5 @@ class NodeEditDialog extends JDialog {
         	this.dispose();
         });
     }
+	
 }

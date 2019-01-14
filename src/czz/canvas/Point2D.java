@@ -1,8 +1,12 @@
-package czz.swtMapDesigner;
+package czz.canvas;
 
 import java.awt.Color;
 import java.awt.Font;
 
+/**
+ * 平面上的点
+ * @author CZZ
+ * */
 public class Point2D {
 
 	/**

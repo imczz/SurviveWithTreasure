@@ -10,6 +10,9 @@ import java.awt.event.MouseMotionListener;
  * */
 public class CanvasMouseListener implements MouseMotionListener, MouseListener {
 
+	/**
+	 * 鼠标点击事件源
+	 * */
 	private ImageCanvas parent;
 
 	//====================methods====================
@@ -28,7 +31,7 @@ public class CanvasMouseListener implements MouseMotionListener, MouseListener {
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+		/*
 		System.out.print("鼠标点击----" + "\t");
 		if (e.getClickCount() == 1) {
 			System.out.println("单击！");
@@ -38,39 +41,34 @@ public class CanvasMouseListener implements MouseMotionListener, MouseListener {
 			System.out.println("三连击！！");
 		} else {
 			System.out.println(e.getClickCount() + "连击！！");
-		}
+		}*/
 		this.parent.mouseClicked(e);
 	}
  
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("鼠标按下（" + e.getX() + "，" + e.getY() + "）");
+		//System.out.println("鼠标按下（" + e.getX() + "，" + e.getY() + "）");
 	}
  
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("鼠标松开（" + e.getX() + "，" + e.getY() + "）");
+		//System.out.println("鼠标松开（" + e.getX() + "，" + e.getY() + "）");
 	}
  
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("鼠标已经进入窗体");
+		//System.out.println("鼠标已经进入窗体");
 	}
  
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("鼠标已经移出窗体");
+		//System.out.println("鼠标已经移出窗体");
 	}
  
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		String string = "鼠标拖动到位置：（" + e.getX() + "，" + e.getY() + "）";
-		System.out.println(string);
+		//String string = "鼠标拖动到位置：（" + e.getX() + "，" + e.getY() + "）";
+		//System.out.println(string);
 	}
  
 	@Override
