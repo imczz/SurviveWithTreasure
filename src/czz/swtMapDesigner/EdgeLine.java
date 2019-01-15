@@ -2,8 +2,8 @@ package czz.swtMapDesigner;
 
 import java.awt.Color;
 
-import czz.canvas.Line2D;
-import czz.canvas.Point2D;
+import czz.canvas.screen.Line2D;
+import czz.canvas.screen.Point2D;
 import czz.graph.Edge;
 
 /**

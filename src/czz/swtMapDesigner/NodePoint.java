@@ -3,7 +3,7 @@ package czz.swtMapDesigner;
 import java.awt.Color;
 import java.awt.Font;
 
-import czz.canvas.Point2D;
+import czz.canvas.screen.Point2D;
 import czz.graph.Node;
 
 /**

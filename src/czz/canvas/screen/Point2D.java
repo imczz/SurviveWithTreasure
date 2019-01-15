@@ -1,7 +1,9 @@
-package czz.canvas;
+package czz.canvas.screen;
 
 import java.awt.Color;
 import java.awt.Font;
+
+import czz.canvas.logic.PointLogic;
 
 /**
  * 平面上的点
@@ -74,6 +76,11 @@ public class Point2D {
 	 * */
 	private Color selectFontColor;
 
+	/**
+	 * 对应的逻辑坐标系中的点
+	 * */
+	private PointLogic logicPoint;
+	
 	//====================methods====================
 	
 	public int getX() {
@@ -185,6 +192,14 @@ public class Point2D {
 		this.indexFont = indexFont;
 	}
 	
+	public PointLogic getLogicPoint() {
+		return logicPoint;
+	}
+
+	public void setLogicPoint(PointLogic logicPoint) {
+		this.logicPoint = logicPoint;
+	}
+
 	/**
 	 * 构造方法
 	 * */

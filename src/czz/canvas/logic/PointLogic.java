@@ -1,9 +1,9 @@
 package czz.canvas.logic;
 
-import czz.canvas.Point2D;
+import czz.canvas.screen.Point2D;
 
 /**
- * 平面上的逻辑点
+ * 逻辑平面上的点
  * @author CZZ
  * */
 public class PointLogic {
@@ -65,6 +65,17 @@ public class PointLogic {
 		this.x = x;
 		this.y = y;
 		this.p2d = null;
+	}
+	
+	/**
+	 * 两个点是否相同
+	 * @param p 另一个点
+	 * @return true相同;false不同
+	 * */
+	public boolean equals(PointLogic p) {
+		boolean ret = false;
+		if (this.x == p.x && this.y == p.y) ret = true;				//两点重合
+		return ret;
 	}
 	
 }

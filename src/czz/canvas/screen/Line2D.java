@@ -1,4 +1,4 @@
-package czz.canvas;
+package czz.canvas.screen;
 
 import java.awt.Color;
 
